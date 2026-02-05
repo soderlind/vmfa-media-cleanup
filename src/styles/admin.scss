@@ -1,0 +1,436 @@
+/**
+ * VMFA Media Cleanup — Admin styles.
+ *
+ * @package VmfaMediaCleanup
+ */
+
+// ──────────────────────────────────────────
+// Variables
+// ──────────────────────────────────────────
+
+$vmfa-primary: #2271b1;
+$vmfa-primary-hover: #135e96;
+$vmfa-success: #00a32a;
+$vmfa-warning: #dba617;
+$vmfa-danger: #d63638;
+$vmfa-border: #c3c4c7;
+$vmfa-border-light: #e0e0e0;
+$vmfa-bg-light: #f6f7f7;
+$vmfa-bg-white: #fff;
+$vmfa-text: #1e1e1e;
+$vmfa-text-muted: #757575;
+$vmfa-radius: 4px;
+$vmfa-thumb-size: 48px;
+
+// ──────────────────────────────────────────
+// Dashboard
+// ──────────────────────────────────────────
+
+.vmfa-cleanup-dashboard {
+	max-width: 960px;
+	margin: 16px 0;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 16px;
+
+		h2 {
+			margin: 0;
+			font-size: 23px;
+			font-weight: 400;
+		}
+	}
+
+	&__stats {
+		display: flex;
+		gap: 16px;
+	}
+
+	&__tabs {
+		display: flex;
+		gap: 0;
+		border-bottom: 1px solid $vmfa-border;
+		margin-bottom: 16px;
+	}
+
+	&__content {
+		background: $vmfa-bg-white;
+		border: 1px solid $vmfa-border;
+		border-radius: $vmfa-radius;
+		padding: 16px;
+	}
+}
+
+.vmfa-cleanup-stat {
+	font-size: 13px;
+	color: $vmfa-text-muted;
+
+	strong {
+		color: $vmfa-text;
+	}
+}
+
+.vmfa-cleanup-tab {
+	padding: 8px 16px;
+	border: 1px solid transparent;
+	border-bottom: none;
+	background: none;
+	cursor: pointer;
+	font-size: 14px;
+	color: $vmfa-text-muted;
+	margin-bottom: -1px;
+	border-radius: $vmfa-radius $vmfa-radius 0 0;
+
+	&:hover {
+		color: $vmfa-text;
+	}
+
+	&.is-active {
+		background: $vmfa-bg-white;
+		border-color: $vmfa-border;
+		color: $vmfa-text;
+	}
+}
+
+// ──────────────────────────────────────────
+// Scan
+// ──────────────────────────────────────────
+
+.vmfa-cleanup-scan {
+	&__controls {
+		display: flex;
+		gap: 8px;
+		margin-bottom: 16px;
+	}
+
+	&__progress {
+		margin-top: 16px;
+	}
+
+	&__phase {
+		font-size: 14px;
+		color: $vmfa-text-muted;
+		margin-bottom: 8px;
+	}
+
+	&__bar-wrapper {
+		height: 20px;
+		background: $vmfa-bg-light;
+		border: 1px solid $vmfa-border;
+		border-radius: 10px;
+		overflow: hidden;
+	}
+
+	&__bar {
+		height: 100%;
+		background: $vmfa-primary;
+		border-radius: 10px;
+		transition: width 0.3s ease;
+		min-width: 0;
+	}
+
+	&__detail {
+		font-size: 12px;
+		color: $vmfa-text-muted;
+		margin-top: 4px;
+		text-align: right;
+	}
+}
+
+// ──────────────────────────────────────────
+// Results
+// ──────────────────────────────────────────
+
+.vmfa-cleanup-results {
+	&__toolbar {
+		display: flex;
+		align-items: flex-end;
+		gap: 16px;
+		margin-bottom: 16px;
+		flex-wrap: wrap;
+	}
+
+	&__loading {
+		display: flex;
+		justify-content: center;
+		padding: 32px;
+	}
+
+	&__error {
+		padding: 12px;
+		background: #fcf0f1;
+		border-left: 4px solid $vmfa-danger;
+		color: $vmfa-danger;
+	}
+
+	&__empty {
+		text-align: center;
+		color: $vmfa-text-muted;
+		padding: 32px;
+	}
+
+	&__list-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 12px;
+		background: $vmfa-bg-light;
+		border: 1px solid $vmfa-border-light;
+		border-radius: $vmfa-radius $vmfa-radius 0 0;
+	}
+
+	&__select-all {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 13px;
+		cursor: pointer;
+	}
+
+	&__total {
+		font-size: 12px;
+		color: $vmfa-text-muted;
+	}
+
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		margin-top: 16px;
+		font-size: 13px;
+	}
+}
+
+// ──────────────────────────────────────────
+// Media Item Row
+// ──────────────────────────────────────────
+
+.vmfa-cleanup-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 12px;
+	border: 1px solid $vmfa-border-light;
+	border-top: none;
+	transition: background 0.15s;
+
+	&:last-child {
+		border-radius: 0 0 $vmfa-radius $vmfa-radius;
+	}
+
+	&:hover {
+		background: $vmfa-bg-light;
+	}
+
+	&.is-selected {
+		background: #e7f3ff;
+	}
+
+	&__checkbox {
+		flex-shrink: 0;
+	}
+
+	&__thumbnail {
+		flex-shrink: 0;
+		width: $vmfa-thumb-size;
+		height: $vmfa-thumb-size;
+		border-radius: 3px;
+		overflow: hidden;
+		background: $vmfa-bg-light;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__placeholder {
+		width: $vmfa-thumb-size;
+		height: $vmfa-thumb-size;
+		background: $vmfa-border-light;
+		border-radius: 3px;
+	}
+
+	&__info {
+		flex-grow: 1;
+		min-width: 0;
+	}
+
+	&__title {
+		font-size: 13px;
+		font-weight: 600;
+		margin-bottom: 2px;
+
+		a {
+			color: $vmfa-primary;
+			text-decoration: none;
+
+			&:hover {
+				color: $vmfa-primary-hover;
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__meta {
+		display: flex;
+		gap: 12px;
+		font-size: 12px;
+		color: $vmfa-text-muted;
+	}
+
+	&__over {
+		color: $vmfa-warning;
+		font-weight: 500;
+	}
+
+	&__actions {
+		display: flex;
+		gap: 4px;
+		flex-shrink: 0;
+	}
+}
+
+// ──────────────────────────────────────────
+// Duplicate Group
+// ──────────────────────────────────────────
+
+.vmfa-cleanup-dup-group {
+	border: 1px solid $vmfa-border;
+	border-radius: $vmfa-radius;
+	margin-bottom: 16px;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 10px 12px;
+		background: $vmfa-bg-light;
+		border-bottom: 1px solid $vmfa-border-light;
+		border-radius: $vmfa-radius $vmfa-radius 0 0;
+	}
+
+	&__hash {
+		font-family: monospace;
+		font-size: 12px;
+		color: $vmfa-text-muted;
+	}
+
+	&__count {
+		font-size: 13px;
+		font-weight: 500;
+		flex-grow: 1;
+	}
+
+	&__members {
+		padding: 0;
+	}
+}
+
+.vmfa-cleanup-dup-member {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 12px;
+	border-bottom: 1px solid $vmfa-border-light;
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	&.is-primary {
+		background: #f0f7e6;
+	}
+
+	&__thumb {
+		flex-shrink: 0;
+		width: $vmfa-thumb-size;
+		height: $vmfa-thumb-size;
+		border-radius: 3px;
+		overflow: hidden;
+		background: $vmfa-bg-light;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__info {
+		flex-grow: 1;
+		min-width: 0;
+	}
+
+	&__title {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+
+		a {
+			color: $vmfa-primary;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__badge {
+		display: inline-block;
+		font-size: 11px;
+		font-weight: 600;
+		background: $vmfa-success;
+		color: #fff;
+		padding: 1px 6px;
+		border-radius: 3px;
+	}
+
+	&__meta {
+		display: flex;
+		gap: 12px;
+		font-size: 12px;
+		color: $vmfa-text-muted;
+	}
+
+	&__actions {
+		flex-shrink: 0;
+	}
+}
+
+// ──────────────────────────────────────────
+// Bulk Action Bar
+// ──────────────────────────────────────────
+
+.vmfa-cleanup-bulk-bar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 12px;
+	background: #e7f3ff;
+	border: 1px solid $vmfa-primary;
+	border-radius: $vmfa-radius;
+
+	&__count {
+		font-size: 13px;
+		font-weight: 500;
+		margin-right: 8px;
+	}
+}
+
+// ──────────────────────────────────────────
+// Confirm Modal
+// ──────────────────────────────────────────
+
+.vmfa-cleanup-confirm__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 16px;
+}
