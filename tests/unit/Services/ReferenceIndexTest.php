@@ -305,7 +305,7 @@ it( 'build_index_batch returns 0 for empty posts', function () {
 it( 'get_total_posts queries public post types', function () {
 	Functions\expect( 'get_post_types' )
 		->with( array( 'public' => true ) )
-		->andReturn( array( 'post', 'page' ) );
+		->andReturn( array( 'post' => 'post', 'page' => 'page' ) );
 
 	$this->wpdb->shouldReceive( 'prepare' )
 		->once()

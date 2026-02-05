@@ -500,7 +500,7 @@ class ReferenceIndex {
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type IN ($placeholders) AND post_status IN ($status_ph)",
-				...array_merge( $post_types, $post_statuses )
+				...array_values( array_merge( $post_types, $post_statuses ) )
 			)
 		);
 
