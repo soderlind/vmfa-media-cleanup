@@ -34,7 +34,7 @@ it( 'check_permission returns WP_Error for non-admins', function () {
 
 	$result = $this->controller->check_permission();
 
-	expect( $result )->toBeInstanceOf( WP_Error::class );
+	expect( $result )->toBeInstanceOf( WP_Error::class);
 } );
 
 it( 'get_settings returns defaults when none stored', function () {
@@ -57,8 +57,8 @@ it( 'get_settings returns defaults when none stored', function () {
 	$result = $this->controller->get_settings( $request );
 
 	expect( $result->data )->toHaveKey( 'archive_folder_name' );
-	expect( $result->data['archive_folder_name'] )->toBe( 'Archive' );
-	expect( $result->data['auto_scan_on_upload'] )->toBeFalse();
+	expect( $result->data[ 'archive_folder_name' ] )->toBe( 'Archive' );
+	expect( $result->data[ 'auto_scan_on_upload' ] )->toBeFalse();
 } );
 
 it( 'get_settings merges stored with defaults', function () {
@@ -80,14 +80,14 @@ it( 'get_settings merges stored with defaults', function () {
 
 	$result = $this->controller->get_settings( $request );
 
-	expect( $result->data['archive_folder_name'] )->toBe( 'My Archive' );
+	expect( $result->data[ 'archive_folder_name' ] )->toBe( 'My Archive' );
 } );
 
 it( 'update_settings sanitizes and saves values', function () {
 	$request = Mockery::mock( 'WP_REST_Request' );
 	$request->shouldReceive( 'get_params' )->andReturn(
 		array(
-			'archive_folder_name'      => 'Custom Archive',
+			'archive_folder_name'       => 'Custom Archive',
 			'oversized_threshold_image' => 5242880,
 			'auto_scan_on_upload'       => true,
 		)
@@ -123,9 +123,9 @@ it( 'update_settings sanitizes and saves values', function () {
 
 	$result = $this->controller->update_settings( $request );
 
-	expect( $result->data['archive_folder_name'] )->toBe( 'Custom Archive' );
-	expect( $result->data['oversized_threshold_image'] )->toBe( 5242880 );
-	expect( $result->data['auto_scan_on_upload'] )->toBeTrue();
+	expect( $result->data[ 'archive_folder_name' ] )->toBe( 'Custom Archive' );
+	expect( $result->data[ 'oversized_threshold_image' ] )->toBe( 5242880 );
+	expect( $result->data[ 'auto_scan_on_upload' ] )->toBeTrue();
 } );
 
 it( 'update_settings rejects invalid content_scan_depth', function () {
@@ -164,5 +164,5 @@ it( 'update_settings rejects invalid content_scan_depth', function () {
 	$result = $this->controller->update_settings( $request );
 
 	// Should keep the default 'full' instead of 'invalid_value'.
-	expect( $result->data['content_scan_depth'] )->toBe( 'full' );
+	expect( $result->data[ 'content_scan_depth' ] )->toBe( 'full' );
 } );

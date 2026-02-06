@@ -5,7 +5,7 @@
  */
 
 import { __ } from '@wordpress/i18n';
-import { Spinner, SelectControl } from '@wordpress/components';
+import { Spinner } from '@wordpress/components';
 import { MediaItemRow } from './MediaItemRow';
 import { DuplicateGroup } from './DuplicateGroup';
 import { BulkActionBar } from './BulkActionBar';
@@ -38,27 +38,9 @@ export function ResultsPanel( { results } ) {
 
 	const totalPages = Math.ceil( total / perPage );
 
-	const typeOptions = [
-		{ label: __( 'Unused', 'vmfa-media-cleanup' ), value: 'unused' },
-		{ label: __( 'Duplicates', 'vmfa-media-cleanup' ), value: 'duplicate' },
-		{ label: __( 'Oversized', 'vmfa-media-cleanup' ), value: 'oversized' },
-		{ label: __( 'Flagged', 'vmfa-media-cleanup' ), value: 'flagged' },
-	];
-
 	return (
 		<div className="vmfa-cleanup-results">
 			<div className="vmfa-cleanup-results__toolbar">
-				<SelectControl
-					label={ __( 'Filter by type', 'vmfa-media-cleanup' ) }
-					value={ type }
-					options={ typeOptions }
-					onChange={ ( value ) => {
-						setType( value );
-						clearSelection();
-					} }
-					__nextHasNoMarginBottom
-				/>
-
 				{ selected.length > 0 && (
 					<BulkActionBar
 						selected={ selected }

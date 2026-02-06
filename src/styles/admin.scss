@@ -434,3 +434,132 @@ $vmfa-thumb-size: 48px;
 	gap: 8px;
 	margin-top: 16px;
 }
+
+// ──────────────────────────────────────────
+// Settings
+// ──────────────────────────────────────────
+
+.vmfa-cleanup-settings {
+	max-width: 600px;
+
+	&__loading {
+		display: flex;
+		justify-content: center;
+		padding: 32px;
+	}
+
+	&__section {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $vmfa-border-light;
+
+		&:last-of-type {
+			border-bottom: none;
+			margin-bottom: 16px;
+			padding-bottom: 0;
+		}
+	}
+
+	&__heading {
+		margin: 0 0 4px;
+		font-size: 14px;
+		font-weight: 600;
+		color: $vmfa-text;
+	}
+
+	&__description {
+		margin: 0 0 12px;
+		font-size: 13px;
+		color: $vmfa-text-muted;
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px 24px;
+	}
+
+	&__field {
+		margin-bottom: 12px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		label {
+			display: block;
+			font-size: 13px;
+			font-weight: 500;
+			color: $vmfa-text;
+			margin-bottom: 4px;
+		}
+
+		input[type="number"],
+		input[type="text"],
+		select {
+			width: 100%;
+			max-width: 320px;
+			padding: 6px 8px;
+			border: 1px solid $vmfa-border;
+			border-radius: $vmfa-radius;
+			font-size: 13px;
+			line-height: 1.4;
+			background: $vmfa-bg-white;
+			color: $vmfa-text;
+			box-sizing: border-box;
+
+			&:focus {
+				border-color: $vmfa-primary;
+				box-shadow: 0 0 0 1px $vmfa-primary;
+				outline: none;
+			}
+		}
+
+		input[type="number"] {
+			max-width: 100px;
+		}
+
+		select {
+			max-width: 100%;
+			appearance: auto;
+		}
+
+		&--checkbox {
+			label {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				font-weight: 400;
+				cursor: pointer;
+			}
+
+			input[type="checkbox"] {
+				width: auto;
+				margin: 0;
+			}
+		}
+	}
+
+	&__actions {
+		padding-top: 8px;
+	}
+}
+
+// ──────────────────────────────────────────
+// Empty State (scan required)
+// ──────────────────────────────────────────
+
+.vmfa-cleanup-results__empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	padding: 48px 16px;
+	text-align: center;
+	color: $vmfa-text-muted;
+
+	p {
+		margin: 0;
+		font-size: 14px;
+	}
+}

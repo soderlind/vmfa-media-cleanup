@@ -41,10 +41,9 @@ export function useResults( initialType = 'unused' ) {
 			} );
 
 			const json = await data.json();
-			const totalHeader = data.headers.get( 'X-WP-Total' );
 
-			setResults( json );
-			setTotal( totalHeader ? parseInt( totalHeader, 10 ) : json.length );
+			setResults( json.items ?? json );
+			setTotal( json.total ?? ( json.items ? json.items.length : json.length ) );
 		} catch ( err ) {
 			setError( err.message || 'Failed to fetch results.' );
 		} finally {
@@ -60,7 +59,7 @@ export function useResults( initialType = 'unused' ) {
 			const data = await apiFetch( {
 				path: '/vmfa-cleanup/v1/duplicates',
 			} );
-			setDuplicateGroups( data );
+			setDuplicateGroups( data.groups ?? data );
 		} catch ( err ) {
 			setError( err.message || 'Failed to fetch duplicate groups.' );
 		} finally {
@@ -119,7 +118,7 @@ export function useResults( initialType = 'unused' ) {
 		} else {
 			fetchResults();
 		}
-	}, [ type, page, perPage ] );
+	}, [ type, page, perPage ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return {
 		results,

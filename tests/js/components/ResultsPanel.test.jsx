@@ -78,32 +78,6 @@ describe( 'ResultsPanel', () => {
 		expect( screen.getByText( /item\(s\)/ ) ).toBeInTheDocument();
 	} );
 
-	it( 'renders type filter select', () => {
-		render( <ResultsPanel results={ baseResults } /> );
-
-		const select = screen.getByRole( 'combobox' );
-		expect( select ).toBeInTheDocument();
-		expect( select.value ).toBe( 'unused' );
-	} );
-
-	it( 'calls setType and clearSelection when filter changes', () => {
-		const setType = vi.fn();
-		const clearSelection = vi.fn();
-
-		render(
-			<ResultsPanel
-				results={ { ...baseResults, setType, clearSelection } }
-			/>
-		);
-
-		fireEvent.change( screen.getByRole( 'combobox' ), {
-			target: { value: 'oversized' },
-		} );
-
-		expect( setType ).toHaveBeenCalledWith( 'oversized' );
-		expect( clearSelection ).toHaveBeenCalledOnce();
-	} );
-
 	it( 'shows duplicate groups empty message for duplicate type', () => {
 		render(
 			<ResultsPanel
@@ -193,4 +167,5 @@ describe( 'ResultsPanel', () => {
 
 		expect( screen.getByText( /selected/ ) ).toBeInTheDocument();
 	} );
+
 } );

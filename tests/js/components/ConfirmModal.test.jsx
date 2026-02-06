@@ -84,4 +84,39 @@ describe( 'ConfirmModal', () => {
 		expect( screen.getByText( 'Are you sure?' ) ).toBeInTheDocument();
 		expect( screen.getByText( 'Confirm' ) ).toBeInTheDocument();
 	} );
+
+	it( 'shows warning when in-use items are provided', () => {
+		const warning = [
+			{ title: 'Image A', referenceCount: 2 },
+			{ title: 'Image B', referenceCount: 1 },
+		];
+
+		render(
+			<ConfirmModal
+				action="trash"
+				count={ 2 }
+				warning={ warning }
+				onConfirm={ vi.fn() }
+				onCancel={ vi.fn() }
+			/>
+		);
+
+		expect( screen.getByText( /still used in posts/ ) ).toBeInTheDocument();
+		expect( screen.getByText( /Image A — 2 reference/ ) ).toBeInTheDocument();
+		expect( screen.getByText( /Image B — 1 reference/ ) ).toBeInTheDocument();
+	} );
+
+	it( 'does not show warning when warning is null', () => {
+		render(
+			<ConfirmModal
+				action="trash"
+				count={ 1 }
+				warning={ null }
+				onConfirm={ vi.fn() }
+				onCancel={ vi.fn() }
+			/>
+		);
+
+		expect( screen.queryByText( /still used in posts/ ) ).not.toBeInTheDocument();
+	} );
 } );

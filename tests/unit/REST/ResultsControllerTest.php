@@ -49,11 +49,11 @@ it( 'get_results returns paginated results', function () {
 
 	$result = $this->controller->get_results( $request );
 
-	expect( $result->data['total'] )->toBe( 3 );
-	expect( $result->data['page'] )->toBe( 1 );
-	expect( $result->data['per_page'] )->toBe( 2 );
-	expect( $result->data['total_pages'] )->toBe( 2 );
-	expect( $result->data['items'] )->toHaveCount( 2 );
+	expect( $result->data[ 'total' ] )->toBe( 3 );
+	expect( $result->data[ 'page' ] )->toBe( 1 );
+	expect( $result->data[ 'per_page' ] )->toBe( 2 );
+	expect( $result->data[ 'total_pages' ] )->toBe( 2 );
+	expect( $result->data[ 'items' ] )->toHaveCount( 2 );
 } );
 
 it( 'get_results returns empty for unknown type', function () {
@@ -75,8 +75,8 @@ it( 'get_results returns empty for unknown type', function () {
 
 	$result = $this->controller->get_results( $request );
 
-	expect( $result->data['total'] )->toBe( 0 );
-	expect( $result->data['items'] )->toBeEmpty();
+	expect( $result->data[ 'total' ] )->toBe( 0 );
+	expect( $result->data[ 'items' ] )->toBeEmpty();
 } );
 
 it( 'get_result_detail returns 404 for missing attachment', function () {
@@ -94,17 +94,17 @@ it( 'get_result_detail returns 404 for missing attachment', function () {
 
 	$result = $this->controller->get_result_detail( $request );
 
-	expect( $result )->toBeInstanceOf( WP_Error::class );
+	expect( $result )->toBeInstanceOf( WP_Error::class);
 } );
 
 it( 'get_result_detail returns attachment info', function () {
 	$request = Mockery::mock( 'WP_REST_Request' );
 	$request->shouldReceive( 'get_param' )->with( 'id' )->andReturn( 42 );
 
-	$attachment             = Mockery::mock( 'WP_Post' );
-	$attachment->post_type  = 'attachment';
-	$attachment->post_date  = '2024-01-01 00:00:00';
-	$attachment->ID         = 42;
+	$attachment            = Mockery::mock( 'WP_Post' );
+	$attachment->post_type = 'attachment';
+	$attachment->post_date = '2024-01-01 00:00:00';
+	$attachment->ID        = 42;
 
 	Functions\expect( 'get_post' )
 		->with( 42 )
@@ -153,7 +153,7 @@ it( 'get_result_detail returns attachment info', function () {
 	$wpdb->prefix = 'wp_';
 	$wpdb->shouldReceive( 'prepare' )->andReturn( 'query' );
 	$wpdb->shouldReceive( 'get_results' )->andReturn( array() );
-	$GLOBALS['wpdb'] = $wpdb;
+	$GLOBALS[ 'wpdb' ] = $wpdb;
 
 	Functions\expect( 'rest_ensure_response' )
 		->andReturnUsing( function ( $data ) {
@@ -162,12 +162,12 @@ it( 'get_result_detail returns attachment info', function () {
 
 	$result = $this->controller->get_result_detail( $request );
 
-	expect( $result->data['attachment_id'] )->toBe( 42 );
-	expect( $result->data['title'] )->toBe( 'Photo' );
-	expect( $result->data['width'] )->toBe( 1920 );
-	expect( $result->data['status'] )->toContain( 'unused' );
+	expect( $result->data[ 'attachment_id' ] )->toBe( 42 );
+	expect( $result->data[ 'title' ] )->toBe( 'Photo' );
+	expect( $result->data[ 'width' ] )->toBe( 1920 );
+	expect( $result->data[ 'status' ] )->toContain( 'unused' );
 
-	unset( $GLOBALS['wpdb'] );
+	unset( $GLOBALS[ 'wpdb' ] );
 } );
 
 it( 'get_duplicate_groups returns empty when no duplicates', function () {
@@ -186,6 +186,48 @@ it( 'get_duplicate_groups returns empty when no duplicates', function () {
 
 	$result = $this->controller->get_duplicate_groups( $request );
 
-	expect( $result->data['groups'] )->toBeEmpty();
-	expect( $result->data['total'] )->toBe( 0 );
+	expect( $result->data[ 'groups' ] )->toBeEmpty();
+	expect( $result->data[ 'total' ] )->toBe( 0 );
+} );
+
+it( 'get_results returns trash items for trash type', function () {
+	$request = Mockery::mock( 'WP_REST_Request' );
+	$request->shouldReceive( 'get_param' )->with( 'type' )->andReturn( 'trash' );
+	$request->shouldReceive( 'get_param' )->with( 'page' )->andReturn( 1 );
+	$request->shouldReceive( 'get_param' )->with( 'per_page' )->andReturn( 20 );
+	$request->shouldReceive( 'get_param' )->with( 'orderby' )->andReturn( 'file_size' );
+	$request->shouldReceive( 'get_param' )->with( 'order' )->andReturn( 'desc' );
+
+	$mock_post = (object) array(
+		'ID'        => 42,
+		'post_date' => '2024-01-01 00:00:00',
+	);
+
+	\WP_Query::$test_fixture = array(
+		'posts'         => array( $mock_post ),
+		'found_posts'   => 1,
+		'max_num_pages' => 1,
+	);
+
+	Functions\expect( 'get_the_title' )->with( 42 )->andReturn( 'Trashed Image' );
+	Functions\expect( 'get_attached_file' )->with( 42 )->andReturn( '/uploads/image.jpg' );
+	Functions\expect( 'wp_get_attachment_metadata' )->with( 42 )->andReturn( array( 'width' => 800, 'height' => 600 ) );
+	Functions\expect( 'get_post_mime_type' )->with( 42 )->andReturn( 'image/jpeg' );
+	Functions\expect( 'wp_filesize' )->andReturn( 1024 );
+	Functions\expect( 'wp_get_attachment_image_url' )->andReturn( '' );
+	Functions\expect( 'get_post_meta' )->with( 42, '_wp_trash_meta_time', true )->andReturn( '1704067200' );
+
+	Functions\expect( 'rest_ensure_response' )
+		->andReturnUsing( function ( $data ) {
+			return new \WP_REST_Response( $data );
+		} );
+
+	$result = $this->controller->get_results( $request );
+
+	expect( $result->data[ 'total' ] )->toBe( 1 );
+	expect( $result->data[ 'items' ] )->toHaveCount( 1 );
+	expect( $result->data[ 'items' ][ 0 ][ 'type' ] )->toBe( 'trash' );
+	expect( $result->data[ 'items' ][ 0 ][ 'title' ] )->toBe( 'Trashed Image' );
+
+	\WP_Query::$test_fixture = null;
 } );

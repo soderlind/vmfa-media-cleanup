@@ -12,7 +12,7 @@ use VmfaMediaCleanup\Detectors\UnusedDetector;
 use VmfaMediaCleanup\Services\ReferenceIndex;
 
 beforeEach( function () {
-	$this->reference_index = Mockery::mock( ReferenceIndex::class );
+	$this->reference_index = Mockery::mock( ReferenceIndex::class);
 	$this->detector        = new UnusedDetector( $this->reference_index );
 } );
 
@@ -50,8 +50,8 @@ it( 'detects unused attachments that are not referenced', function () {
 		->andReturn( true );
 
 	// Mock post data.
-	$post              = new stdClass();
-	$post->post_date   = '2025-01-01 00:00:00';
+	$post            = new stdClass();
+	$post->post_date = '2025-01-01 00:00:00';
 
 	Functions\expect( 'get_post' )
 		->with( $attachment_id )
@@ -83,11 +83,11 @@ it( 'detects unused attachments that are not referenced', function () {
 	$results = $this->detector->detect( array( $attachment_id ) );
 
 	expect( $results )->toHaveKey( $attachment_id );
-	expect( $results[ $attachment_id ]['type'] )->toBe( 'unused' );
-	expect( $results[ $attachment_id ]['attachment_id'] )->toBe( $attachment_id );
-	expect( $results[ $attachment_id ]['title'] )->toBe( 'Test Image' );
-	expect( $results[ $attachment_id ]['width'] )->toBe( 800 );
-	expect( $results[ $attachment_id ]['height'] )->toBe( 600 );
+	expect( $results[ $attachment_id ][ 'type' ] )->toBe( 'unused' );
+	expect( $results[ $attachment_id ][ 'attachment_id' ] )->toBe( $attachment_id );
+	expect( $results[ $attachment_id ][ 'title' ] )->toBe( 'Test Image' );
+	expect( $results[ $attachment_id ][ 'width' ] )->toBe( 800 );
+	expect( $results[ $attachment_id ][ 'height' ] )->toBe( 600 );
 } );
 
 it( 'skips referenced attachments', function () {

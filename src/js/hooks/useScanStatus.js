@@ -35,8 +35,8 @@ export function useScanStatus() {
 				total: data.total || 0,
 			} );
 
-			// Stop polling when scan is done or idle.
-			if ( data.status === 'done' || data.status === 'idle' ) {
+			// Stop polling when scan is complete or idle.
+			if ( data.status === 'complete' || data.status === 'idle' ) {
 				stopPolling();
 				fetchStats();
 			}

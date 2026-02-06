@@ -27,7 +27,7 @@ export function ScanProgress( { scan } ) {
 	} = scan;
 
 	const isRunning = status === 'running';
-	const isDone = status === 'done';
+	const isDone = status === 'complete';
 	const percent =
 		progress.total > 0
 			? Math.round( ( progress.processed / progress.total ) * 100 )

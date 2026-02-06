@@ -18,11 +18,11 @@ use VmfaMediaCleanup\Detectors\OversizedDetector;
 use VmfaMediaCleanup\Plugin;
 
 beforeEach( function () {
-	$this->reference_index    = Mockery::mock( ReferenceIndex::class );
-	$this->hash_service       = Mockery::mock( HashService::class );
-	$this->unused_detector    = Mockery::mock( UnusedDetector::class );
-	$this->duplicate_detector = Mockery::mock( DuplicateDetector::class );
-	$this->oversized_detector = Mockery::mock( OversizedDetector::class );
+	$this->reference_index    = Mockery::mock( ReferenceIndex::class);
+	$this->hash_service       = Mockery::mock( HashService::class);
+	$this->unused_detector    = Mockery::mock( UnusedDetector::class);
+	$this->duplicate_detector = Mockery::mock( DuplicateDetector::class);
+	$this->oversized_detector = Mockery::mock( OversizedDetector::class);
 
 	$this->service = new ScanService(
 		$this->reference_index,
@@ -62,10 +62,10 @@ it( 'get_progress returns defaults when no progress stored', function () {
 
 	$progress = $this->service->get_progress();
 
-	expect( $progress['status'] )->toBe( 'idle' );
-	expect( $progress['phase'] )->toBe( '' );
-	expect( $progress['total'] )->toBe( 0 );
-	expect( $progress['processed'] )->toBe( 0 );
+	expect( $progress[ 'status' ] )->toBe( 'idle' );
+	expect( $progress[ 'phase' ] )->toBe( '' );
+	expect( $progress[ 'total' ] )->toBe( 0 );
+	expect( $progress[ 'processed' ] )->toBe( 0 );
 } );
 
 it( 'get_progress returns stored progress', function () {
@@ -87,10 +87,10 @@ it( 'get_progress returns stored progress', function () {
 
 	$progress = $this->service->get_progress();
 
-	expect( $progress['status'] )->toBe( 'running' );
-	expect( $progress['phase'] )->toBe( 'hashing' );
-	expect( $progress['total'] )->toBe( 500 );
-	expect( $progress['processed'] )->toBe( 100 );
+	expect( $progress[ 'status' ] )->toBe( 'running' );
+	expect( $progress[ 'phase' ] )->toBe( 'hashing' );
+	expect( $progress[ 'total' ] )->toBe( 500 );
+	expect( $progress[ 'processed' ] )->toBe( 100 );
 } );
 
 it( 'get_results returns all results when no type specified', function () {
@@ -155,7 +155,7 @@ it( 'cancel_scan returns false when cancel function not available', function () 
 	// Since Brain Monkey defines the function when we use Functions\expect,
 	// we can't easily test the false path without patchwork config.
 	// Instead, we verify the method signature returns bool.
-	$result = (new \ReflectionMethod( $this->service, 'cancel_scan' ))->getReturnType();
+	$result = ( new \ReflectionMethod( $this->service, 'cancel_scan' ) )->getReturnType();
 	expect( $result->getName() )->toBe( 'bool' );
 } );
 
@@ -201,21 +201,21 @@ it( 'get_stats computes statistics from results', function () {
 		->andReturn( $count_obj );
 
 	// Mock $wpdb for flagged count.
-	$wpdb         = Mockery::mock( 'wpdb' );
+	$wpdb           = Mockery::mock( 'wpdb' );
 	$wpdb->postmeta = 'wp_postmeta';
 	$wpdb->shouldReceive( 'get_var' )->once()->andReturn( '5' );
-	$GLOBALS['wpdb'] = $wpdb;
+	$GLOBALS[ 'wpdb' ] = $wpdb;
 
 	$stats = $this->service->get_stats();
 
-	expect( $stats['total_media'] )->toBe( 100 );
-	expect( $stats['unused_count'] )->toBe( 2 );
-	expect( $stats['duplicate_count'] )->toBe( 3 );
-	expect( $stats['duplicate_groups'] )->toBe( 2 );
-	expect( $stats['oversized_count'] )->toBe( 1 );
-	expect( $stats['flagged_count'] )->toBe( 5 );
+	expect( $stats[ 'total_media' ] )->toBe( 100 );
+	expect( $stats[ 'unused_count' ] )->toBe( 2 );
+	expect( $stats[ 'duplicate_count' ] )->toBe( 3 );
+	expect( $stats[ 'duplicate_groups' ] )->toBe( 2 );
+	expect( $stats[ 'oversized_count' ] )->toBe( 1 );
+	expect( $stats[ 'flagged_count' ] )->toBe( 5 );
 
-	unset( $GLOBALS['wpdb'] );
+	unset( $GLOBALS[ 'wpdb' ] );
 } );
 
 it( 'handle_finalize_scan marks scan as complete', function () {
@@ -249,9 +249,9 @@ it( 'handle_finalize_scan marks scan as complete', function () {
 	Functions\expect( 'update_option' )
 		->once()
 		->andReturnUsing( function ( $name, $value ) {
-			expect( $value['status'] )->toBe( 'complete' );
-			expect( $value['phase'] )->toBe( 'done' );
-			expect( $value['completed_at'] )->toBe( '2024-01-01 01:00:00' );
+			expect( $value[ 'status' ] )->toBe( 'complete' );
+			expect( $value[ 'phase' ] )->toBe( 'done' );
+			expect( $value[ 'completed_at' ] )->toBe( '2024-01-01 01:00:00' );
 			return true;
 		} );
 
@@ -283,7 +283,7 @@ it( 'handle_build_index_batch schedules next batch when more posts remain', func
 		->once()
 		->andReturnUsing( function ( $time, $hook, $args ) {
 			expect( $hook )->toBe( 'vmfa_cleanup_build_index_batch' );
-			expect( $args[0]['offset'] )->toBe( 200 );
+			expect( $args[ 0 ][ 'offset' ] )->toBe( 200 );
 			return 1;
 		} );
 

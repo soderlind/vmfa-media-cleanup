@@ -134,7 +134,7 @@ describe( 'useScanStatus', () => {
 
 	it( 'resetScan posts to reset endpoint and clears state', async () => {
 		apiFetch.mockResolvedValue( {
-			status: 'done',
+			status: 'complete',
 			phase: 'done',
 			processed: 100,
 			total: 100,

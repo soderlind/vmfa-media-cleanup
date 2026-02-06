@@ -12,7 +12,7 @@ use VmfaMediaCleanup\REST\ScanController;
 use VmfaMediaCleanup\Services\ScanService;
 
 beforeEach( function () {
-	$this->scan_service = Mockery::mock( ScanService::class );
+	$this->scan_service = Mockery::mock( ScanService::class);
 	$this->controller   = new ScanController( $this->scan_service );
 } );
 
@@ -36,7 +36,7 @@ it( 'check_permission returns WP_Error for non-admins', function () {
 
 	$result = $this->controller->check_permission();
 
-	expect( $result )->toBeInstanceOf( WP_Error::class );
+	expect( $result )->toBeInstanceOf( WP_Error::class);
 } );
 
 it( 'start_scan returns error when scan fails', function () {
@@ -54,7 +54,7 @@ it( 'start_scan returns error when scan fails', function () {
 
 	$result = $this->controller->start_scan( $request );
 
-	expect( $result )->toBeInstanceOf( WP_Error::class );
+	expect( $result )->toBeInstanceOf( WP_Error::class);
 } );
 
 it( 'start_scan returns success response', function () {
@@ -76,8 +76,8 @@ it( 'start_scan returns success response', function () {
 
 	$result = $this->controller->start_scan( $request );
 
-	expect( $result->data['started'] )->toBeTrue();
-	expect( $result->data['progress']['status'] )->toBe( 'running' );
+	expect( $result->data[ 'started' ] )->toBeTrue();
+	expect( $result->data[ 'progress' ][ 'status' ] )->toBe( 'running' );
 } );
 
 it( 'get_status returns scan progress', function () {
@@ -94,8 +94,8 @@ it( 'get_status returns scan progress', function () {
 
 	$result = $this->controller->get_status( $request );
 
-	expect( $result->data['status'] )->toBe( 'running' );
-	expect( $result->data['phase'] )->toBe( 'hashing' );
+	expect( $result->data[ 'status' ] )->toBe( 'running' );
+	expect( $result->data[ 'phase' ] )->toBe( 'hashing' );
 } );
 
 it( 'cancel_scan returns success when cancelled', function () {
@@ -111,7 +111,7 @@ it( 'cancel_scan returns success when cancelled', function () {
 
 	$result = $this->controller->cancel_scan( $request );
 
-	expect( $result->data['cancelled'] )->toBeTrue();
+	expect( $result->data[ 'cancelled' ] )->toBeTrue();
 } );
 
 it( 'cancel_scan returns error when cannot cancel', function () {
@@ -127,7 +127,7 @@ it( 'cancel_scan returns error when cannot cancel', function () {
 
 	$result = $this->controller->cancel_scan( $request );
 
-	expect( $result )->toBeInstanceOf( WP_Error::class );
+	expect( $result )->toBeInstanceOf( WP_Error::class);
 } );
 
 it( 'reset_scan returns success', function () {
@@ -143,7 +143,7 @@ it( 'reset_scan returns success', function () {
 
 	$result = $this->controller->reset_scan( $request );
 
-	expect( $result->data['reset'] )->toBeTrue();
+	expect( $result->data[ 'reset' ] )->toBeTrue();
 } );
 
 it( 'get_stats returns statistics', function () {
@@ -168,6 +168,6 @@ it( 'get_stats returns statistics', function () {
 
 	$result = $this->controller->get_stats( $request );
 
-	expect( $result->data['total_media'] )->toBe( 100 );
-	expect( $result->data['unused_count'] )->toBe( 10 );
+	expect( $result->data[ 'total_media' ] )->toBe( 100 );
+	expect( $result->data[ 'unused_count' ] )->toBe( 10 );
 } );

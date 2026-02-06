@@ -7,7 +7,7 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { Button } from '@wordpress/components';
-import { archive, trash, starEmpty } from '@wordpress/icons';
+import { archive, trash, starEmpty, backup } from '@wordpress/icons';
 import { ConfirmModal } from './ConfirmModal';
 
 /**
@@ -30,7 +30,7 @@ export function BulkActionBar( {
 	const count = selected.length;
 
 	const handleAction = ( action ) => {
-		if ( action === 'trash' || action === 'archive' ) {
+		if ( action === 'trash' || action === 'archive' || action === 'delete' ) {
 			setConfirmAction( action );
 		} else {
 			onAction( action, selected );
@@ -44,41 +44,64 @@ export function BulkActionBar( {
 				{ __( 'selected', 'vmfa-media-cleanup' ) }
 			</span>
 
-			{ type !== 'flagged' && (
-				<Button
-					icon={ starEmpty }
-					size="compact"
-					onClick={ () => handleAction( 'flag' ) }
-				>
-					{ __( 'Flag', 'vmfa-media-cleanup' ) }
-				</Button>
+			{ type === 'trash' ? (
+				<>
+					<Button
+						icon={ backup }
+						size="compact"
+						onClick={ () => handleAction( 'restore' ) }
+					>
+						{ __( 'Restore', 'vmfa-media-cleanup' ) }
+					</Button>
+
+					<Button
+						icon={ trash }
+						size="compact"
+						isDestructive
+						onClick={ () => handleAction( 'delete' ) }
+					>
+						{ __( 'Delete permanently', 'vmfa-media-cleanup' ) }
+					</Button>
+				</>
+			) : (
+				<>
+					{ type !== 'flagged' && (
+						<Button
+							icon={ starEmpty }
+							size="compact"
+							onClick={ () => handleAction( 'flag' ) }
+						>
+							{ __( 'Flag', 'vmfa-media-cleanup' ) }
+						</Button>
+					) }
+
+					{ type === 'flagged' && (
+						<Button
+							size="compact"
+							onClick={ () => handleAction( 'unflag' ) }
+						>
+							{ __( 'Unflag', 'vmfa-media-cleanup' ) }
+						</Button>
+					) }
+
+					<Button
+						icon={ archive }
+						size="compact"
+						onClick={ () => handleAction( 'archive' ) }
+					>
+						{ __( 'Archive', 'vmfa-media-cleanup' ) }
+					</Button>
+
+					<Button
+						icon={ trash }
+						size="compact"
+						isDestructive
+						onClick={ () => handleAction( 'trash' ) }
+					>
+						{ __( 'Trash', 'vmfa-media-cleanup' ) }
+					</Button>
+				</>
 			) }
-
-			{ type === 'flagged' && (
-				<Button
-					size="compact"
-					onClick={ () => handleAction( 'unflag' ) }
-				>
-					{ __( 'Unflag', 'vmfa-media-cleanup' ) }
-				</Button>
-			) }
-
-			<Button
-				icon={ archive }
-				size="compact"
-				onClick={ () => handleAction( 'archive' ) }
-			>
-				{ __( 'Archive', 'vmfa-media-cleanup' ) }
-			</Button>
-
-			<Button
-				icon={ trash }
-				size="compact"
-				isDestructive
-				onClick={ () => handleAction( 'trash' ) }
-			>
-				{ __( 'Trash', 'vmfa-media-cleanup' ) }
-			</Button>
 
 			<Button
 				variant="link"

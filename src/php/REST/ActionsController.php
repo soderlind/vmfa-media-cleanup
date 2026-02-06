@@ -115,6 +115,36 @@ class ActionsController extends WP_REST_Controller {
 				),
 			)
 		);
+
+		// POST /actions/restore — Restore trashed media.
+		register_rest_route(
+			$this->namespace,
+			'/actions/restore',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'restore_media' ),
+				'permission_callback' => array( $this, 'check_permission' ),
+				'args'                => array(
+					'ids' => array(
+						'required' => true,
+						'type'     => 'array',
+						'items'    => array( 'type' => 'integer' ),
+					),
+				),
+			)
+		);
+
+		// POST /actions/delete — Permanently delete media.
+		register_rest_route(
+			$this->namespace,
+			'/actions/delete',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'delete_media' ),
+				'permission_callback' => array( $this, 'check_permission' ),
+				'args'                => $this->get_bulk_args(),
+			)
+		);
 	}
 
 	/**
@@ -197,7 +227,11 @@ class ActionsController extends WP_REST_Controller {
 	}
 
 	/**
-	 * Trash media (WordPress soft-delete).
+	 * Trash media (soft-delete, bypasses MEDIA_TRASH constant).
+	 *
+	 * WordPress core's wp_trash_post() permanently deletes attachments when
+	 * MEDIA_TRASH is false. We manually set the trash status so our plugin
+	 * manages its own trash view regardless of site configuration.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error
@@ -220,9 +254,25 @@ class ActionsController extends WP_REST_Controller {
 
 		foreach ( array_chunk( $ids, 50 ) as $chunk ) {
 			foreach ( $chunk as $attachment_id ) {
-				$result = wp_trash_post( $attachment_id );
+				$attachment = get_post( $attachment_id );
 
-				if ( $result ) {
+				if ( ! $attachment || 'attachment' !== $attachment->post_type ) {
+					++$failed;
+					continue;
+				}
+
+				// Store original status and trash time for restore.
+				update_post_meta( $attachment_id, '_wp_trash_meta_status', $attachment->post_status );
+				update_post_meta( $attachment_id, '_wp_trash_meta_time', time() );
+
+				$result = wp_update_post(
+					array(
+						'ID'          => $attachment_id,
+						'post_status' => 'trash',
+					)
+				);
+
+				if ( $result && ! is_wp_error( $result ) ) {
 					++$success;
 
 					/**
@@ -240,6 +290,110 @@ class ActionsController extends WP_REST_Controller {
 		return rest_ensure_response(
 			array(
 				'action'  => 'trash',
+				'success' => $success,
+				'failed'  => $failed,
+			)
+		);
+	}
+
+	/**
+	 * Restore trashed media.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response
+	 */
+	public function restore_media( WP_REST_Request $request ): WP_REST_Response {
+		$ids     = array_map( 'absint', $request->get_param( 'ids' ) );
+		$success = 0;
+		$failed  = 0;
+
+		foreach ( $ids as $attachment_id ) {
+			$attachment = get_post( $attachment_id );
+
+			if ( ! $attachment || 'attachment' !== $attachment->post_type || 'trash' !== $attachment->post_status ) {
+				++$failed;
+				continue;
+			}
+
+			$original_status = get_post_meta( $attachment_id, '_wp_trash_meta_status', true );
+			$new_status      = $original_status ?: 'inherit';
+
+			$result = wp_update_post(
+				array(
+					'ID'          => $attachment_id,
+					'post_status' => $new_status,
+				)
+			);
+
+			if ( $result && ! is_wp_error( $result ) ) {
+				delete_post_meta( $attachment_id, '_wp_trash_meta_status' );
+				delete_post_meta( $attachment_id, '_wp_trash_meta_time' );
+				++$success;
+
+				/**
+				 * Fires after a media item is restored from trash.
+				 *
+				 * @param int $attachment_id The attachment ID.
+				 */
+				do_action( 'vmfa_cleanup_media_restored', $attachment_id );
+			} else {
+				++$failed;
+			}
+		}
+
+		return rest_ensure_response(
+			array(
+				'action'  => 'restore',
+				'success' => $success,
+				'failed'  => $failed,
+			)
+		);
+	}
+
+	/**
+	 * Permanently delete media.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function delete_media( WP_REST_Request $request ) {
+		if ( ! $request->get_param( 'confirm' ) ) {
+			return new WP_Error(
+				'not_confirmed',
+				__( 'Action requires confirmation. Set confirm to true.', 'vmfa-media-cleanup' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$ids = array_map( 'absint', $request->get_param( 'ids' ) );
+
+		do_action( 'vmfa_cleanup_before_bulk_action', 'delete', $ids );
+
+		$success = 0;
+		$failed  = 0;
+
+		foreach ( array_chunk( $ids, 50 ) as $chunk ) {
+			foreach ( $chunk as $attachment_id ) {
+				$result = wp_delete_attachment( $attachment_id, true );
+
+				if ( $result ) {
+					++$success;
+
+					/**
+					 * Fires after a media item is permanently deleted.
+					 *
+					 * @param int $attachment_id The attachment ID.
+					 */
+					do_action( 'vmfa_cleanup_media_deleted', $attachment_id );
+				} else {
+					++$failed;
+				}
+			}
+		}
+
+		return rest_ensure_response(
+			array(
+				'action'  => 'delete',
 				'success' => $success,
 				'failed'  => $failed,
 			)

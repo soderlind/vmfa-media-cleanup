@@ -38,3 +38,9 @@ export const Modal = ( { title, children, onRequestClose } ) => (
 		{ children }
 	</div>
 );
+
+export const ExternalLink = ( { href, children, ...rest } ) => (
+	<a href={ href } target="_blank" rel="noopener noreferrer" { ...rest }>
+		{ children }
+	</a>
+);

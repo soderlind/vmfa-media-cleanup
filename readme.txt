@@ -4,7 +4,7 @@ Tags: media, cleanup, unused, duplicates, virtual-media-folders
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.3
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,6 +58,16 @@ Yes. Trashed media goes to the standard WordPress trash and can be restored.
 The reference scanner checks known meta keys for Elementor, Beaver Builder, Fusion Builder, and similar page builders.
 
 == Changelog ==
+
+= 0.2.0 =
+* Added: Reference count display on duplicate group members.
+* Added: Warning confirmation when trashing in-use duplicate media.
+* Fixed: PHP 8.x error from `array_values()` around `get_post_types()` spread.
+* Fixed: Scan status mismatch preventing UI from showing completion.
+* Fixed: Results response parsing — extract items array from REST response.
+* Fixed: Dashboard stats key mismatch with backend response.
+* Fixed: Duplicate groups not rendering from REST response.
+* Fixed: DuplicateGroup component data shape for attachment_id/is_primary fields.
 
 = 0.1.0 =
 * Initial release.

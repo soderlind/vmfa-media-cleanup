@@ -34,7 +34,7 @@ it( 'check_permission returns WP_Error for non-admins', function () {
 
 	$result = $this->controller->check_permission();
 
-	expect( $result )->toBeInstanceOf( WP_Error::class );
+	expect( $result )->toBeInstanceOf( WP_Error::class);
 } );
 
 it( 'trash_media requires confirmation', function () {
@@ -48,7 +48,7 @@ it( 'trash_media requires confirmation', function () {
 
 	$result = $this->controller->trash_media( $request );
 
-	expect( $result )->toBeInstanceOf( WP_Error::class );
+	expect( $result )->toBeInstanceOf( WP_Error::class);
 } );
 
 it( 'trash_media trashes confirmed items', function () {
@@ -62,8 +62,17 @@ it( 'trash_media trashes confirmed items', function () {
 
 	Functions\expect( 'do_action' )->andReturn( null );
 
-	Functions\when( 'wp_trash_post' )->alias( function ( $id ) {
-		return $id === 42 ? (object) array( 'ID' => 42 ) : false;
+	Functions\expect( 'get_post' )->andReturnUsing( function ( $id ) {
+		if ( $id === 42 ) {
+			return (object) array( 'ID' => 42, 'post_type' => 'attachment', 'post_status' => 'inherit' );
+		}
+		return null;
+	} );
+
+	Functions\expect( 'update_post_meta' )->andReturn( true );
+
+	Functions\expect( 'wp_update_post' )->andReturnUsing( function ( $args ) {
+		return $args[ 'ID' ] ?? 0;
 	} );
 
 	Functions\expect( 'rest_ensure_response' )
@@ -73,9 +82,82 @@ it( 'trash_media trashes confirmed items', function () {
 
 	$result = $this->controller->trash_media( $request );
 
-	expect( $result->data['action'] )->toBe( 'trash' );
-	expect( $result->data['success'] )->toBe( 1 );
-	expect( $result->data['failed'] )->toBe( 1 );
+	expect( $result->data[ 'action' ] )->toBe( 'trash' );
+	expect( $result->data[ 'success' ] )->toBe( 1 );
+	expect( $result->data[ 'failed' ] )->toBe( 1 );
+} );
+
+it( 'restore_media restores trashed items', function () {
+	$request = Mockery::mock( 'WP_REST_Request' );
+	$request->shouldReceive( 'get_param' )->with( 'ids' )->andReturn( array( 42 ) );
+
+	Functions\expect( 'absint' )->andReturnUsing( function ( $v ) {
+		return (int) $v;
+	} );
+
+	Functions\expect( 'get_post' )->with( 42 )->andReturn(
+		(object) array( 'ID' => 42, 'post_type' => 'attachment', 'post_status' => 'trash' )
+	);
+
+	Functions\expect( 'get_post_meta' )
+		->with( 42, '_wp_trash_meta_status', true )
+		->andReturn( 'inherit' );
+
+	Functions\expect( 'wp_update_post' )->andReturn( 42 );
+	Functions\expect( 'delete_post_meta' )->andReturn( true );
+	Functions\expect( 'do_action' )->andReturn( null );
+
+	Functions\expect( 'rest_ensure_response' )
+		->andReturnUsing( function ( $data ) {
+			return new \WP_REST_Response( $data );
+		} );
+
+	$result = $this->controller->restore_media( $request );
+
+	expect( $result->data[ 'action' ] )->toBe( 'restore' );
+	expect( $result->data[ 'success' ] )->toBe( 1 );
+	expect( $result->data[ 'failed' ] )->toBe( 0 );
+} );
+
+it( 'delete_media requires confirmation', function () {
+	$request = Mockery::mock( 'WP_REST_Request' );
+	$request->shouldReceive( 'get_param' )->with( 'confirm' )->andReturn( false );
+
+	Functions\expect( '__' )
+		->andReturnUsing( function ( $text ) {
+			return $text;
+		} );
+
+	$result = $this->controller->delete_media( $request );
+
+	expect( $result )->toBeInstanceOf( WP_Error::class );
+} );
+
+it( 'delete_media permanently deletes confirmed items', function () {
+	$request = Mockery::mock( 'WP_REST_Request' );
+	$request->shouldReceive( 'get_param' )->with( 'confirm' )->andReturn( true );
+	$request->shouldReceive( 'get_param' )->with( 'ids' )->andReturn( array( 42, 43 ) );
+
+	Functions\expect( 'absint' )->andReturnUsing( function ( $v ) {
+		return (int) $v;
+	} );
+
+	Functions\expect( 'do_action' )->andReturn( null );
+
+	Functions\when( 'wp_delete_attachment' )->alias( function ( $id, $force ) {
+		return $id === 42 ? (object) array( 'ID' => 42 ) : false;
+	} );
+
+	Functions\expect( 'rest_ensure_response' )
+		->andReturnUsing( function ( $data ) {
+			return new \WP_REST_Response( $data );
+		} );
+
+	$result = $this->controller->delete_media( $request );
+
+	expect( $result->data[ 'action' ] )->toBe( 'delete' );
+	expect( $result->data[ 'success' ] )->toBe( 1 );
+	expect( $result->data[ 'failed' ] )->toBe( 1 );
 } );
 
 it( 'archive_media requires confirmation', function () {
@@ -89,7 +171,7 @@ it( 'archive_media requires confirmation', function () {
 
 	$result = $this->controller->archive_media( $request );
 
-	expect( $result )->toBeInstanceOf( WP_Error::class );
+	expect( $result )->toBeInstanceOf( WP_Error::class);
 } );
 
 it( 'flag_media sets meta and returns count', function () {
@@ -114,8 +196,8 @@ it( 'flag_media sets meta and returns count', function () {
 
 	$result = $this->controller->flag_media( $request );
 
-	expect( $result->data['action'] )->toBe( 'flag' );
-	expect( $result->data['success'] )->toBe( 2 );
+	expect( $result->data[ 'action' ] )->toBe( 'flag' );
+	expect( $result->data[ 'success' ] )->toBe( 2 );
 } );
 
 it( 'unflag_media deletes meta and returns count', function () {
@@ -138,8 +220,8 @@ it( 'unflag_media deletes meta and returns count', function () {
 
 	$result = $this->controller->unflag_media( $request );
 
-	expect( $result->data['action'] )->toBe( 'unflag' );
-	expect( $result->data['success'] )->toBe( 1 );
+	expect( $result->data[ 'action' ] )->toBe( 'unflag' );
+	expect( $result->data[ 'success' ] )->toBe( 1 );
 } );
 
 it( 'set_primary clears old and sets new primary', function () {
@@ -167,6 +249,6 @@ it( 'set_primary clears old and sets new primary', function () {
 
 	$result = $this->controller->set_primary( $request );
 
-	expect( $result->data['action'] )->toBe( 'set-primary' );
-	expect( $result->data['primary_id'] )->toBe( 42 );
+	expect( $result->data[ 'action' ] )->toBe( 'set-primary' );
+	expect( $result->data[ 'primary_id' ] )->toBe( 42 );
 } );

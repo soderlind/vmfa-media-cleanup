@@ -109,4 +109,51 @@ describe( 'BulkActionBar', () => {
 
 		expect( onClearSelection ).toHaveBeenCalledOnce();
 	} );
+
+	it( 'shows restore and delete buttons for trash type', () => {
+		render(
+			<BulkActionBar
+				selected={ [ 1, 2 ] }
+				type="trash"
+				onAction={ vi.fn() }
+				onClearSelection={ vi.fn() }
+			/>
+		);
+
+		expect( screen.getByText( 'Restore' ) ).toBeInTheDocument();
+		expect( screen.getByText( 'Delete permanently' ) ).toBeInTheDocument();
+		expect( screen.queryByText( 'Archive' ) ).not.toBeInTheDocument();
+		expect( screen.queryByText( 'Flag' ) ).not.toBeInTheDocument();
+	} );
+
+	it( 'calls onAction directly for restore', () => {
+		const onAction = vi.fn();
+		render(
+			<BulkActionBar
+				selected={ [ 10, 20 ] }
+				type="trash"
+				onAction={ onAction }
+				onClearSelection={ vi.fn() }
+			/>
+		);
+
+		fireEvent.click( screen.getByText( 'Restore' ) );
+
+		expect( onAction ).toHaveBeenCalledWith( 'restore', [ 10, 20 ] );
+	} );
+
+	it( 'shows confirm modal for delete permanently', () => {
+		render(
+			<BulkActionBar
+				selected={ [ 1 ] }
+				type="trash"
+				onAction={ vi.fn() }
+				onClearSelection={ vi.fn() }
+			/>
+		);
+
+		fireEvent.click( screen.getByText( 'Delete permanently' ) );
+
+		expect( screen.getByRole( 'dialog' ) ).toBeInTheDocument();
+	} );
 } );

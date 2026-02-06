@@ -12,7 +12,7 @@ use VmfaMediaCleanup\Detectors\DuplicateDetector;
 use VmfaMediaCleanup\Services\HashService;
 
 beforeEach( function () {
-	$this->hash_service = Mockery::mock( HashService::class );
+	$this->hash_service = Mockery::mock( HashService::class);
 	$this->detector     = new DuplicateDetector( $this->hash_service );
 } );
 
@@ -85,11 +85,11 @@ it( 'detects duplicates when two attachments share a hash', function () {
 	$results = $this->detector->detect( array( $id_a, $id_b ) );
 
 	expect( $results )->toHaveCount( 2 );
-	expect( $results[ $id_a ]['hash'] )->toBe( 'abc123hash' );
-	expect( $results[ $id_b ]['hash'] )->toBe( 'abc123hash' );
+	expect( $results[ $id_a ][ 'hash' ] )->toBe( 'abc123hash' );
+	expect( $results[ $id_b ][ 'hash' ] )->toBe( 'abc123hash' );
 	// Oldest is primary.
-	expect( $results[ $id_a ]['is_primary'] )->toBeTrue();
-	expect( $results[ $id_b ]['is_primary'] )->toBeFalse();
+	expect( $results[ $id_a ][ 'is_primary' ] )->toBeTrue();
+	expect( $results[ $id_b ][ 'is_primary' ] )->toBeFalse();
 } );
 
 it( 'returns empty when no duplicates exist', function () {
@@ -209,8 +209,8 @@ it( 'respects user-assigned primary via meta', function () {
 
 	$results = $this->detector->detect( array( $id_a, $id_b ) );
 
-	expect( $results[ $id_b ]['is_primary'] )->toBeTrue();
-	expect( $results[ $id_a ]['is_primary'] )->toBeFalse();
+	expect( $results[ $id_b ][ 'is_primary' ] )->toBeTrue();
+	expect( $results[ $id_a ][ 'is_primary' ] )->toBeFalse();
 } );
 
 it( 'groups duplicates correctly via get_groups', function () {
@@ -244,8 +244,8 @@ it( 'groups duplicates correctly via get_groups', function () {
 	$groups = $this->detector->get_groups( $results );
 
 	expect( $groups )->toHaveCount( 2 );
-	expect( $groups[0]['hash'] )->toBe( 'hash_abc' );
-	expect( $groups[0]['members'] )->toHaveCount( 2 );
-	expect( $groups[1]['hash'] )->toBe( 'hash_xyz' );
-	expect( $groups[1]['members'] )->toHaveCount( 2 );
+	expect( $groups[ 0 ][ 'hash' ] )->toBe( 'hash_abc' );
+	expect( $groups[ 0 ][ 'members' ] )->toHaveCount( 2 );
+	expect( $groups[ 1 ][ 'hash' ] )->toBe( 'hash_xyz' );
+	expect( $groups[ 1 ][ 'members' ] )->toHaveCount( 2 );
 } );

@@ -348,10 +348,11 @@ final class Plugin {
 			'vmfa-media-cleanup-admin',
 			'vmfaMediaCleanup',
 			array(
-				'restUrl'  => rest_url( 'vmfa-cleanup/v1/' ),
-				'nonce'    => wp_create_nonce( 'wp_rest' ),
-				'settings' => $this->get_settings(),
-				'folders'  => $this->get_folders(),
+				'restUrl'    => rest_url( 'vmfa-cleanup/v1/' ),
+				'nonce'      => wp_create_nonce( 'wp_rest' ),
+				'settings'   => $this->get_settings(),
+				'folders'    => $this->get_folders(),
+				'adminUrl'   => admin_url(),
 			)
 		);
 	}

@@ -1,0 +1,387 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Virtual Media Folders - Media Cleanup 0.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vmfa-media-cleanup\n"
+"Last-Translator: Per Soderlind <per@soderlind.no>\n"
+"Language-Team: Norwegian Bokmål\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-02-06T00:34:44+00:00\n"
+"PO-Revision-Date: 2026-02-06 01:00+0100\n"
+"Language: nb_NO\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: vmfa-media-cleanup\n"
+
+#. Plugin Name of the plugin
+#: vmfa-media-cleanup.php
+msgid "Virtual Media Folders - Media Cleanup"
+msgstr "Virtual Media Folders – Medieopprydding"
+
+#. Plugin URI of the plugin
+#: vmfa-media-cleanup.php
+msgid "https://github.com/soderlind/vmfa-media-cleanup"
+msgstr "https://github.com/soderlind/vmfa-media-cleanup"
+
+#. Description of the plugin
+#: vmfa-media-cleanup.php
+msgid "Media maintenance add-on for Virtual Media Folders. Detect unused, duplicate, and oversized media — then archive, trash, or flag for review."
+msgstr "Vedlikeholdstillegg for Virtual Media Folders. Oppdag ubrukte, dupliserte og for store mediefiler — arkiver, kast eller flagg for gjennomgang."
+
+#. Author of the plugin
+#: vmfa-media-cleanup.php
+msgid "Per Soderlind"
+msgstr "Per Soderlind"
+
+#. Author URI of the plugin
+#: vmfa-media-cleanup.php
+msgid "https://soderlind.no"
+msgstr "https://soderlind.no"
+
+#: src/php/Detectors/DuplicateDetector.php:52
+msgid "Duplicate"
+msgstr "Duplikat"
+
+#: src/php/Detectors/OversizedDetector.php:34
+#: src/js/components/CleanupDashboard.jsx:44
+msgid "Oversized"
+msgstr "For store"
+
+#: src/php/Detectors/UnusedDetector.php:53
+#: src/js/components/CleanupDashboard.jsx:42
+msgid "Unused"
+msgstr "Ubrukt"
+
+#: src/php/Plugin.php:234
+#: src/php/Plugin.php:277
+#: src/js/components/CleanupDashboard.jsx:53
+msgid "Media Cleanup"
+msgstr "Medieopprydding"
+
+#: src/php/Plugin.php:276
+#: src/php/Plugin.php:292
+msgid "Virtual Media Folders Media Cleanup"
+msgstr "Virtual Media Folders Medieopprydding"
+
+#: src/php/REST/ActionsController.php:159
+#: src/php/REST/ResultsController.php:131
+#: src/php/REST/ScanController.php:128
+#: src/php/REST/SettingsController.php:93
+msgid "You do not have permission to access this resource."
+msgstr "Du har ikke tilgang til denne ressursen."
+
+#: src/php/REST/ActionsController.php:176
+#: src/php/REST/ActionsController.php:243
+#: src/php/REST/ActionsController.php:363
+msgid "Action requires confirmation. Set confirm to true."
+msgstr "Handlingen krever bekreftelse. Sett bekreft til sann."
+
+#: src/php/REST/ResultsController.php:208
+msgid "Attachment not found."
+msgstr "Vedlegget ble ikke funnet."
+
+#: src/php/REST/ScanController.php:148
+msgid "Could not start scan. A scan may already be running, or Action Scheduler is not available."
+msgstr "Kunne ikke starte skanning. En skanning kjører kanskje allerede, eller Action Scheduler er ikke tilgjengelig."
+
+#: src/php/REST/ScanController.php:183
+msgid "Could not cancel scan."
+msgstr "Kunne ikke avbryte skanningen."
+
+#: src/js/components/BulkActionBar.jsx:44
+msgid "selected"
+msgstr "valgt"
+
+#: src/js/components/BulkActionBar.jsx:54
+#: src/js/components/MediaItemRow.jsx:128
+msgid "Restore"
+msgstr "Gjenopprett"
+
+#: src/js/components/BulkActionBar.jsx:63
+#: src/js/components/ConfirmModal.jsx:25
+#: src/js/components/MediaItemRow.jsx:134
+msgid "Delete permanently"
+msgstr "Slett permanent"
+
+#: src/js/components/BulkActionBar.jsx:74
+msgid "Flag"
+msgstr "Flagg"
+
+#: src/js/components/BulkActionBar.jsx:83
+#: src/js/components/MediaItemRow.jsx:145
+msgid "Unflag"
+msgstr "Fjern flagg"
+
+#: src/js/components/BulkActionBar.jsx:92
+#: src/js/components/ConfirmModal.jsx:24
+#: src/js/components/MediaItemRow.jsx:153
+#: src/js/components/SettingsPanel.jsx:220
+msgid "Archive"
+msgstr "Arkiver"
+
+#: src/js/components/BulkActionBar.jsx:101
+#: src/js/components/CleanupDashboard.jsx:46
+#: src/js/components/MediaItemRow.jsx:159
+msgid "Trash"
+msgstr "Papirkurv"
+
+#: src/js/components/BulkActionBar.jsx:110
+msgid "Clear"
+msgstr "Tøm"
+
+#: src/js/components/CleanupDashboard.jsx:41
+msgid "Scan"
+msgstr "Skann"
+
+#: src/js/components/CleanupDashboard.jsx:43
+msgid "Duplicates"
+msgstr "Duplikater"
+
+#: src/js/components/CleanupDashboard.jsx:45
+msgid "Flagged"
+msgstr "Flagget"
+
+#: src/js/components/CleanupDashboard.jsx:47
+msgid "Settings"
+msgstr "Innstillinger"
+
+#: src/js/components/CleanupDashboard.jsx:57
+msgid "Unused:"
+msgstr "Ubrukt:"
+
+#: src/js/components/CleanupDashboard.jsx:61
+msgid "Duplicates:"
+msgstr "Duplikater:"
+
+#: src/js/components/CleanupDashboard.jsx:65
+msgid "Oversized:"
+msgstr "For store:"
+
+#: src/js/components/CleanupDashboard.jsx:92
+msgid "Run a scan first to detect items."
+msgstr "Kjør en skanning først for å oppdage elementer."
+
+#: src/js/components/CleanupDashboard.jsx:101
+#: src/js/components/ScanProgress.jsx:72
+msgid "Start Scan"
+msgstr "Start skanning"
+
+#: src/js/components/ConfirmModal.jsx:23
+msgid "Move to Trash"
+msgstr "Flytt til papirkurv"
+
+#. translators: %d: number of items
+#: src/js/components/ConfirmModal.jsx:30
+#, js-format
+msgid "Are you sure you want to move %d item(s) to trash? This can be undone from the Trash tab."
+msgstr "Er du sikker på at du vil flytte %d element(er) til papirkurven? Dette kan angres fra Papirkurv-fanen."
+
+#. translators: %d: number of items
+#: src/js/components/ConfirmModal.jsx:32
+#, js-format
+msgid "Are you sure you want to archive %d item(s)? They will be moved to the Archive folder."
+msgstr "Er du sikker på at du vil arkivere %d element(er)? De vil bli flyttet til arkivmappen."
+
+#. translators: %d: number of items
+#: src/js/components/ConfirmModal.jsx:34
+#, js-format
+msgid "Are you sure you want to permanently delete %d item(s)? This cannot be undone."
+msgstr "Er du sikker på at du vil slette %d element(er) permanent? Dette kan ikke angres."
+
+#: src/js/components/ConfirmModal.jsx:39
+msgid "Confirm Action"
+msgstr "Bekreft handling"
+
+#: src/js/components/ConfirmModal.jsx:43
+msgid "Are you sure?"
+msgstr "Er du sikker?"
+
+#: src/js/components/ConfirmModal.jsx:48
+msgid "⚠ Warning:"
+msgstr "⚠ Advarsel:"
+
+#: src/js/components/ConfirmModal.jsx:49
+msgid "The following items are still used in posts. Trashing them will break those references."
+msgstr "Følgende elementer brukes fortsatt i innlegg. Å kaste dem vil ødelegge disse referansene."
+
+#. translators: %d: number of references
+#: src/js/components/ConfirmModal.jsx:54
+#, js-format
+msgid "%d reference(s)"
+msgstr "%d referanse(r)"
+
+#: src/js/components/ConfirmModal.jsx:67
+#: src/js/components/ScanProgress.jsx:83
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: src/js/components/ConfirmModal.jsx:74
+msgid "Confirm"
+msgstr "Bekreft"
+
+#: src/js/components/DuplicateGroup.jsx:82
+msgid "Hash:"
+msgstr "Hash:"
+
+#: src/js/components/DuplicateGroup.jsx:87
+msgid "copies"
+msgstr "kopier"
+
+#: src/js/components/DuplicateGroup.jsx:96
+msgid "Trash non-primary"
+msgstr "Kast ikke-primære"
+
+#: src/js/components/DuplicateGroup.jsx:135
+msgid "Primary"
+msgstr "Primær"
+
+#. translators: %d: number of posts referencing this media
+#: src/js/components/DuplicateGroup.jsx:149
+#, js-format
+msgid "Used in %d post(s)"
+msgstr "Brukt i %d innlegg"
+
+#: src/js/components/DuplicateGroup.jsx:165
+msgid "Primary copy"
+msgstr "Primærkopi"
+
+#: src/js/components/DuplicateGroup.jsx:166
+msgid "Set as primary"
+msgstr "Sett som primær"
+
+#: src/js/components/MediaItemRow.jsx:78
+msgid "Select item"
+msgstr "Velg element"
+
+#: src/js/components/MediaItemRow.jsx:116
+msgid "Over by:"
+msgstr "Over med:"
+
+#: src/js/components/MediaItemRow.jsx:146
+msgid "Flag for review"
+msgstr "Flagg for gjennomgang"
+
+#: src/js/components/ResultsPanel.jsx:70
+msgid "No duplicate groups found."
+msgstr "Ingen duplikatgrupper funnet."
+
+#: src/js/components/ResultsPanel.jsx:88
+msgid "No items found."
+msgstr "Ingen elementer funnet."
+
+#: src/js/components/ResultsPanel.jsx:106
+msgid "Select all"
+msgstr "Velg alle"
+
+#: src/js/components/ResultsPanel.jsx:110
+msgid "item(s)"
+msgstr "element(er)"
+
+#: src/js/components/ResultsPanel.jsx:140
+msgid "← Previous"
+msgstr "← Forrige"
+
+#: src/js/components/ResultsPanel.jsx:150
+msgid "Next →"
+msgstr "Neste →"
+
+#: src/js/components/ScanProgress.jsx:37
+msgid "Building reference index…"
+msgstr "Bygger referanseindeks …"
+
+#: src/js/components/ScanProgress.jsx:38
+msgid "Computing file hashes…"
+msgstr "Beregner filhasher …"
+
+#: src/js/components/ScanProgress.jsx:39
+msgid "Running detectors…"
+msgstr "Kjører detektorer …"
+
+#: src/js/components/ScanProgress.jsx:40
+msgid "Scan complete"
+msgstr "Skanning fullført"
+
+#: src/js/components/ScanProgress.jsx:53
+msgid "Scan completed successfully."
+msgstr "Skanningen ble fullført."
+
+#: src/js/components/ScanProgress.jsx:59
+msgid "Scan was cancelled."
+msgstr "Skanningen ble avbrutt."
+
+#: src/js/components/ScanProgress.jsx:71
+msgid "Re-scan"
+msgstr "Skann på nytt"
+
+#: src/js/components/ScanProgress.jsx:93
+msgid "Reset"
+msgstr "Tilbakestill"
+
+#: src/js/components/SettingsPanel.jsx:86
+msgid "Settings saved."
+msgstr "Innstillingene er lagret."
+
+#: src/js/components/SettingsPanel.jsx:92
+msgid "Oversized Thresholds"
+msgstr "Terskelverdier for store filer"
+
+#: src/js/components/SettingsPanel.jsx:95
+msgid "Files exceeding these sizes will be flagged as oversized."
+msgstr "Filer som overskrider disse størrelsene vil bli flagget som for store."
+
+#: src/js/components/SettingsPanel.jsx:101
+msgid "Images (MB)"
+msgstr "Bilder (MB)"
+
+#: src/js/components/SettingsPanel.jsx:116
+msgid "Videos (MB)"
+msgstr "Videoer (MB)"
+
+#: src/js/components/SettingsPanel.jsx:131
+msgid "Audio (MB)"
+msgstr "Lyd (MB)"
+
+#: src/js/components/SettingsPanel.jsx:146
+msgid "Documents (MB)"
+msgstr "Dokumenter (MB)"
+
+#: src/js/components/SettingsPanel.jsx:163
+msgid "Scan Settings"
+msgstr "Skanneinnstillinger"
+
+#: src/js/components/SettingsPanel.jsx:168
+msgid "Content scan depth"
+msgstr "Innholdsskanningsdybde"
+
+#: src/js/components/SettingsPanel.jsx:176
+msgid "Full (post content + featured images)"
+msgstr "Full (innhold + fremhevede bilder)"
+
+#: src/js/components/SettingsPanel.jsx:179
+msgid "Featured images only"
+msgstr "Kun fremhevede bilder"
+
+#: src/js/components/SettingsPanel.jsx:182
+msgid "None (skip content scanning)"
+msgstr "Ingen (hopp over innholdsskanning)"
+
+#: src/js/components/SettingsPanel.jsx:189
+msgid "Scan batch size"
+msgstr "Skannegruppestørrelse"
+
+#: src/js/components/SettingsPanel.jsx:213
+msgid "Automatically scan new uploads"
+msgstr "Skann nye opplastinger automatisk"
+
+#: src/js/components/SettingsPanel.jsx:225
+msgid "Archive folder name"
+msgstr "Navn på arkivmappe"
+
+#: src/js/components/SettingsPanel.jsx:246
+msgid "Saving…"
+msgstr "Lagrer …"
+
+#: src/js/components/SettingsPanel.jsx:247
+msgid "Save Settings"
+msgstr "Lagre innstillinger"

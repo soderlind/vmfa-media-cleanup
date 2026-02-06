@@ -28,8 +28,8 @@ it( 'detects an image exceeding the threshold', function () {
 	$attachment_id = 42;
 	$file_path     = tempnam( sys_get_temp_dir(), 'vmfa_oversized_' );
 	file_put_contents( $file_path, str_repeat( 'x', 100 ) ); // Real file for file_exists.
-	$file_size     = 5 * 1024 * 1024; // 5 MB (reported by wp_filesize mock).
-	$threshold     = 2 * 1024 * 1024; // 2 MB.
+	$file_size = 5 * 1024 * 1024; // 5 MB (reported by wp_filesize mock).
+	$threshold = 2 * 1024 * 1024; // 2 MB.
 
 	// Settings with image threshold.
 	Functions\expect( 'get_option' )
@@ -74,10 +74,10 @@ it( 'detects an image exceeding the threshold', function () {
 	$results = $this->detector->detect( array( $attachment_id ) );
 
 	expect( $results )->toHaveCount( 1 );
-	expect( $results[ $attachment_id ]['type'] )->toBe( 'oversized' );
-	expect( $results[ $attachment_id ]['file_size'] )->toBe( $file_size );
-	expect( $results[ $attachment_id ]['threshold'] )->toBe( $threshold );
-	expect( $results[ $attachment_id ]['over_by'] )->toBe( $file_size - $threshold );
+	expect( $results[ $attachment_id ][ 'type' ] )->toBe( 'oversized' );
+	expect( $results[ $attachment_id ][ 'file_size' ] )->toBe( $file_size );
+	expect( $results[ $attachment_id ][ 'threshold' ] )->toBe( $threshold );
+	expect( $results[ $attachment_id ][ 'over_by' ] )->toBe( $file_size - $threshold );
 
 	unlink( $file_path );
 } );
@@ -136,10 +136,10 @@ it( 'uses different thresholds per mime type', function () {
 	$image_id = 10;
 	$video_id = 20;
 
-	$image_size    = 1 * 1024 * 1024; // 1 MB (under 2 MB threshold).
-	$video_size    = 60 * 1024 * 1024; // 60 MB (over 50 MB threshold).
-	$image_thresh  = 2 * 1024 * 1024;
-	$video_thresh  = 50 * 1024 * 1024;
+	$image_size   = 1 * 1024 * 1024; // 1 MB (under 2 MB threshold).
+	$video_size   = 60 * 1024 * 1024; // 60 MB (over 50 MB threshold).
+	$image_thresh = 2 * 1024 * 1024;
+	$video_thresh = 50 * 1024 * 1024;
 
 	// Create real temp files so file_exists() returns true.
 	$image_path = tempnam( sys_get_temp_dir(), 'vmfa_img_' );
@@ -219,8 +219,8 @@ it( 'uses document threshold for unknown mime types', function () {
 	$attachment_id = 42;
 	$file_path     = tempnam( sys_get_temp_dir(), 'vmfa_zip_' );
 	file_put_contents( $file_path, 'x' ); // Real file for file_exists.
-	$file_size     = 15 * 1024 * 1024; // 15 MB.
-	$doc_thresh    = 10 * 1024 * 1024; // 10 MB.
+	$file_size  = 15 * 1024 * 1024; // 15 MB.
+	$doc_thresh = 10 * 1024 * 1024; // 10 MB.
 
 	Functions\expect( 'get_option' )
 		->with( 'vmfa_media_cleanup_settings', array() )
@@ -264,7 +264,7 @@ it( 'uses document threshold for unknown mime types', function () {
 	$results = $this->detector->detect( array( $attachment_id ) );
 
 	expect( $results )->toHaveCount( 1 );
-	expect( $results[ $attachment_id ]['threshold'] )->toBe( $doc_thresh );
+	expect( $results[ $attachment_id ][ 'threshold' ] )->toBe( $doc_thresh );
 
 	unlink( $file_path );
 } );

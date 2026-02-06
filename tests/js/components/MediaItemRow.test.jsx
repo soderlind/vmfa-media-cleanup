@@ -123,7 +123,7 @@ describe( 'MediaItemRow', () => {
 		expect( onToggle ).toHaveBeenCalledOnce();
 	} );
 
-	it( 'calls onAction immediately for flag', () => {
+	it( 'calls onAction with flag and shows filled star after flagging', () => {
 		const onAction = vi.fn();
 		render(
 			<MediaItemRow
@@ -135,9 +135,48 @@ describe( 'MediaItemRow', () => {
 			/>
 		);
 
-		fireEvent.click( screen.getByLabelText( 'Flag for review' ) );
+		// Initially shows "Flag for review" (unflagged).
+		const flagBtn = screen.getByLabelText( 'Flag for review' );
+		fireEvent.click( flagBtn );
 
 		expect( onAction ).toHaveBeenCalledWith( 'flag', [ 42 ] );
+
+		// After flagging, button label changes to "Unflag".
+		expect( screen.getByLabelText( 'Unflag' ) ).toBeInTheDocument();
+	} );
+
+	it( 'shows filled star and Unflag label when item is already flagged', () => {
+		render(
+			<MediaItemRow
+				item={ { ...baseItem, is_flagged: true } }
+				type="unused"
+				isSelected={ false }
+				onToggle={ vi.fn() }
+				onAction={ vi.fn() }
+			/>
+		);
+
+		expect( screen.getByLabelText( 'Unflag' ) ).toBeInTheDocument();
+		expect( screen.queryByLabelText( 'Flag for review' ) ).not.toBeInTheDocument();
+	} );
+
+	it( 'calls onAction with unflag when clicking a flagged item', () => {
+		const onAction = vi.fn();
+		render(
+			<MediaItemRow
+				item={ { ...baseItem, is_flagged: true } }
+				type="unused"
+				isSelected={ false }
+				onToggle={ vi.fn() }
+				onAction={ onAction }
+			/>
+		);
+
+		fireEvent.click( screen.getByLabelText( 'Unflag' ) );
+
+		expect( onAction ).toHaveBeenCalledWith( 'unflag', [ 42 ] );
+		// After unflagging, shows "Flag for review" again.
+		expect( screen.getByLabelText( 'Flag for review' ) ).toBeInTheDocument();
 	} );
 
 	it( 'calls onAction immediately for archive', () => {
@@ -206,5 +245,40 @@ describe( 'MediaItemRow', () => {
 		fireEvent.click( screen.getByLabelText( 'Flag for review' ) );
 
 		expect( onAction ).toHaveBeenCalledWith( 'flag', [ 99 ] );
+	} );
+
+	it( 'shows restore and delete buttons for trash type', () => {
+		render(
+			<MediaItemRow
+				item={ baseItem }
+				type="trash"
+				isSelected={ false }
+				onToggle={ vi.fn() }
+				onAction={ vi.fn() }
+			/>
+		);
+
+		expect( screen.getByLabelText( 'Restore' ) ).toBeInTheDocument();
+		expect( screen.getByLabelText( 'Delete permanently' ) ).toBeInTheDocument();
+		// Normal actions should not appear.
+		expect( screen.queryByLabelText( 'Archive' ) ).not.toBeInTheDocument();
+		expect( screen.queryByLabelText( 'Flag for review' ) ).not.toBeInTheDocument();
+	} );
+
+	it( 'shows confirm modal for delete permanently action', () => {
+		render(
+			<MediaItemRow
+				item={ baseItem }
+				type="trash"
+				isSelected={ false }
+				onToggle={ vi.fn() }
+				onAction={ vi.fn() }
+			/>
+		);
+
+		fireEvent.click( screen.getByLabelText( 'Delete permanently' ) );
+
+		expect( screen.getByRole( 'dialog' ) ).toBeInTheDocument();
+		expect( screen.getByText( 'Delete permanently' ) ).toBeInTheDocument();
 	} );
 } );

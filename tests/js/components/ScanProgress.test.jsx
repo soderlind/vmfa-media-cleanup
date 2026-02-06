@@ -98,10 +98,10 @@ describe( 'ScanProgress', () => {
 		).toBeInTheDocument();
 	} );
 
-	it( 'shows success notice when done', () => {
+	it( 'shows success notice when complete', () => {
 		render(
 			<ScanProgress
-				scan={ { ...baseScan, status: 'done', phase: 'done' } }
+				scan={ { ...baseScan, status: 'complete', phase: 'done' } }
 			/>
 		);
 
@@ -110,21 +110,21 @@ describe( 'ScanProgress', () => {
 		).toBeInTheDocument();
 	} );
 
-	it( 'shows Re-scan button when done', () => {
+	it( 'shows Re-scan button when complete', () => {
 		render(
 			<ScanProgress
-				scan={ { ...baseScan, status: 'done', phase: 'done' } }
+				scan={ { ...baseScan, status: 'complete', phase: 'done' } }
 			/>
 		);
 
 		expect( screen.getByText( 'Re-scan' ) ).toBeInTheDocument();
 	} );
 
-	it( 'shows Reset button when done', () => {
+	it( 'shows Reset button when complete', () => {
 		const resetScan = vi.fn();
 		render(
 			<ScanProgress
-				scan={ { ...baseScan, status: 'done', phase: 'done', resetScan } }
+				scan={ { ...baseScan, status: 'complete', phase: 'done', resetScan } }
 			/>
 		);
 

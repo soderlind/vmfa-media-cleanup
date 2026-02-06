@@ -1,6 +1,10 @@
 {
-	"media-cleanup": {
-		"handle": "vmfa-media-cleanup",
-		"domain": "vmfa-media-cleanup"
-	}
+    "src/js/components/BulkActionBar.jsx": "vmfa-media-cleanup-admin",
+    "src/js/components/CleanupDashboard.jsx": "vmfa-media-cleanup-admin",
+    "src/js/components/ConfirmModal.jsx": "vmfa-media-cleanup-admin",
+    "src/js/components/DuplicateGroup.jsx": "vmfa-media-cleanup-admin",
+    "src/js/components/MediaItemRow.jsx": "vmfa-media-cleanup-admin",
+    "src/js/components/ResultsPanel.jsx": "vmfa-media-cleanup-admin",
+    "src/js/components/ScanProgress.jsx": "vmfa-media-cleanup-admin",
+    "src/js/components/SettingsPanel.jsx": "vmfa-media-cleanup-admin"
 }

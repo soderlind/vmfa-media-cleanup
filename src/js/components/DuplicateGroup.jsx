@@ -7,7 +7,7 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { Button } from '@wordpress/components';
-import { starFilled, starEmpty, trash } from '@wordpress/icons';
+import { starFilled, starEmpty, trash, info } from '@wordpress/icons';
 import { ConfirmModal } from './ConfirmModal';
 
 /**
@@ -38,7 +38,9 @@ function formatSize( bytes ) {
  */
 export function DuplicateGroup( { group, onAction } ) {
 	const [ confirmTrash, setConfirmTrash ] = useState( null );
-	const groupIds = group.members.map( ( m ) => m.id );
+	const getId = ( m ) => m.id ?? m.attachment_id;
+	const groupIds = group.members.map( getId );
+	const primaryId = group.primary ?? group.members.find( ( m ) => m.is_primary )?.attachment_id ?? groupIds[ 0 ];
 
 	const handleSetPrimary = async ( id ) => {
 		try {
@@ -53,12 +55,24 @@ export function DuplicateGroup( { group, onAction } ) {
 
 	const handleTrashNonPrimary = () => {
 		const nonPrimary = group.members
-			.filter( ( m ) => m.id !== group.primary )
-			.map( ( m ) => m.id );
+			.filter( ( m ) => getId( m ) !== primaryId );
+		const ids = nonPrimary.map( getId );
 
-		if ( nonPrimary.length > 0 ) {
-			setConfirmTrash( nonPrimary );
+		if ( ids.length === 0 ) {
+			return;
 		}
+
+		const inUse = nonPrimary.filter(
+			( m ) => ( m.reference_count ?? 0 ) > 0
+		);
+
+		setConfirmTrash( {
+			ids,
+			inUseItems: inUse.map( ( m ) => ( {
+				title: m.title || `#${ getId( m ) }`,
+				referenceCount: m.reference_count,
+			} ) ),
+		} );
 	};
 
 	return (
@@ -85,11 +99,12 @@ export function DuplicateGroup( { group, onAction } ) {
 
 			<div className="vmfa-cleanup-dup-group__members">
 				{ group.members.map( ( member ) => {
-					const isPrimary = member.id === group.primary;
+					const memberId = getId( member );
+					const isPrimary = memberId === primaryId;
 
 					return (
 						<div
-							key={ member.id }
+							key={ memberId }
 							className={ `vmfa-cleanup-dup-member ${
 								isPrimary ? 'is-primary' : ''
 							}` }
@@ -109,11 +124,11 @@ export function DuplicateGroup( { group, onAction } ) {
 							<div className="vmfa-cleanup-dup-member__info">
 								<div className="vmfa-cleanup-dup-member__title">
 									<a
-										href={ `${ window.vmfaMediaCleanup?.adminUrl || '/wp-admin/' }post.php?post=${ member.id }&action=edit` }
-										target="_blank"
-										rel="noopener noreferrer"
-									>
-										{ member.title || `#${ member.id }` }
+											href={ `${ window.vmfaMediaCleanup?.adminUrl || '/wp-admin/' }post.php?post=${ memberId }&action=edit` }
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											{ member.title || `#${ memberId }` }
 									</a>
 									{ isPrimary && (
 										<span className="vmfa-cleanup-dup-member__badge">
@@ -129,8 +144,15 @@ export function DuplicateGroup( { group, onAction } ) {
 									) }
 									{ member.upload_date && (
 										<span>{ member.upload_date }</span>
-									) }
-								</div>
+										) }									{ ( member.reference_count ?? 0 ) > 0 && (() => {
+									/* translators: %d: number of posts referencing this media */
+									const usedIn = __( 'Used in %d post(s)', 'vmfa-media-cleanup' ).replace( '%d', member.reference_count );
+									return (
+										<span className="vmfa-cleanup-dup-member__refs">
+											{ usedIn }
+										</span>
+									);
+								})() }								</div>
 							</div>
 
 							<div className="vmfa-cleanup-dup-member__actions">
@@ -146,7 +168,7 @@ export function DuplicateGroup( { group, onAction } ) {
 									size="small"
 									disabled={ isPrimary }
 									onClick={ () =>
-										handleSetPrimary( member.id )
+										handleSetPrimary( memberId )
 									}
 								/>
 							</div>
@@ -158,9 +180,14 @@ export function DuplicateGroup( { group, onAction } ) {
 			{ confirmTrash && (
 				<ConfirmModal
 					action="trash"
-					count={ confirmTrash.length }
+					count={ confirmTrash.ids.length }
+					warning={
+						confirmTrash.inUseItems.length > 0
+							? confirmTrash.inUseItems
+							: null
+					}
 					onConfirm={ () => {
-						onAction( 'trash', confirmTrash );
+						onAction( 'trash', confirmTrash.ids );
 						setConfirmTrash( null );
 					} }
 					onCancel={ () => setConfirmTrash( null ) }

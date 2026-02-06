@@ -16,6 +16,7 @@ const baseGroup = {
 			file_size: 2048,
 			upload_date: '2025-01-01',
 			thumbnail_url: 'https://example.com/1.jpg',
+			reference_count: 2,
 		},
 		{
 			id: 2,
@@ -23,6 +24,7 @@ const baseGroup = {
 			file_size: 2048,
 			upload_date: '2025-06-01',
 			thumbnail_url: 'https://example.com/2.jpg',
+			reference_count: 0,
 		},
 	],
 };
@@ -108,4 +110,35 @@ describe( 'DuplicateGroup', () => {
 			'/wp-admin/post.php?post=1&action=edit'
 		);
 	} );
+
+	it( 'shows reference count for members with references', () => {
+		render( <DuplicateGroup group={ baseGroup } onAction={ vi.fn() } /> );
+
+		expect( screen.getByText( 'Used in 2 post(s)' ) ).toBeInTheDocument();
+	} );
+
+	it( 'does not show reference count for members without references', () => {
+		render( <DuplicateGroup group={ baseGroup } onAction={ vi.fn() } /> );
+
+		const refTexts = screen.getAllByText( /Used in \d+ post/ );
+		expect( refTexts ).toHaveLength( 1 );
+	} );
+
+	it( 'shows in-use warning when trashing referenced duplicates', () => {
+		const groupWithInUse = {
+			...baseGroup,
+			members: [
+				{ ...baseGroup.members[ 0 ] },
+				{ ...baseGroup.members[ 1 ], reference_count: 3 },
+			],
+		};
+
+		render( <DuplicateGroup group={ groupWithInUse } onAction={ vi.fn() } /> );
+
+		fireEvent.click( screen.getByText( 'Trash non-primary' ) );
+
+		expect( screen.getByText( /still used in posts/ ) ).toBeInTheDocument();
+		expect( screen.getByText( /Copy — 3 reference/ ) ).toBeInTheDocument();
+	} );
+
 } );

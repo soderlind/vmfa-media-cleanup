@@ -46,7 +46,7 @@ class ResultsController extends WP_REST_Controller {
 				'args'                => array(
 					'type'     => array(
 						'type'              => 'string',
-						'enum'              => array( 'unused', 'duplicate', 'oversized', 'flagged' ),
+						'enum'              => array( 'unused', 'duplicate', 'oversized', 'flagged', 'trash' ),
 						'default'           => 'unused',
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -153,6 +153,11 @@ class ResultsController extends WP_REST_Controller {
 			return $this->get_flagged_results( $page, $per_page );
 		}
 
+		// Handle trash type (attachments with post_status = trash).
+		if ( 'trash' === $type ) {
+			return $this->get_trash_results( $page, $per_page );
+		}
+
 		$all_results = get_option( 'vmfa_cleanup_results', array() );
 		$items       = $all_results[ $type ] ?? array();
 
@@ -168,6 +173,13 @@ class ResultsController extends WP_REST_Controller {
 		// Paginate.
 		$total = count( $items );
 		$items = array_slice( $items, ( $page - 1 ) * $per_page, $per_page );
+
+		// Enrich items with flagged state.
+		foreach ( $items as &$item ) {
+			$att_id              = (int) ( $item[ 'attachment_id' ] ?? $item[ 'id' ] ?? 0 );
+			$item[ 'is_flagged' ] = $att_id > 0 && (bool) get_post_meta( $att_id, '_vmfa_flagged_for_review', true );
+		}
+		unset( $item );
 
 		return rest_ensure_response(
 			array(
@@ -208,7 +220,7 @@ class ResultsController extends WP_REST_Controller {
 		// Enrich references with source titles.
 		foreach ( $references as &$ref ) {
 			if ( $ref[ 'source_id' ] > 0 ) {
-				$source_post         = get_post( (int) $ref[ 'source_id' ] );
+				$source_post           = get_post( (int) $ref[ 'source_id' ] );
 				$ref[ 'source_title' ] = $source_post ? get_the_title( $source_post ) : '';
 				$ref[ 'source_url' ]   = $source_post ? get_edit_post_link( $source_post->ID, 'raw' ) : '';
 			}
@@ -275,6 +287,16 @@ class ResultsController extends WP_REST_Controller {
 		$detector = new DuplicateDetector( new \VmfaMediaCleanup\Services\HashService() );
 		$groups   = $detector->get_groups( $duplicate_results );
 
+		// Enrich members with reference counts.
+		$reference_index = new ReferenceIndex();
+		foreach ( $groups as &$group ) {
+			foreach ( $group[ 'members' ] as &$member ) {
+				$refs                      = $reference_index->get_references( (int) $member[ 'attachment_id' ] );
+				$member[ 'reference_count' ] = count( $refs );
+			}
+		}
+		unset( $group, $member );
+
 		// Paginate groups.
 		$total  = count( $groups );
 		$groups = array_slice( $groups, ( $page - 1 ) * $per_page, $per_page );
@@ -286,6 +308,56 @@ class ResultsController extends WP_REST_Controller {
 				'page'        => $page,
 				'per_page'    => $per_page,
 				'total_pages' => (int) ceil( $total / $per_page ),
+			)
+		);
+	}
+
+	/**
+	 * Get trashed attachment results.
+	 *
+	 * @param int $page     Current page.
+	 * @param int $per_page Items per page.
+	 * @return WP_REST_Response
+	 */
+	private function get_trash_results( int $page, int $per_page ): WP_REST_Response {
+		$trash_query = new \WP_Query(
+			array(
+				'post_type'      => 'attachment',
+				'post_status'    => 'trash',
+				'posts_per_page' => $per_page,
+				'paged'          => $page,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			)
+		);
+
+		$items = array();
+		foreach ( $trash_query->posts as $attachment ) {
+			$file_path = get_attached_file( $attachment->ID );
+			$metadata  = wp_get_attachment_metadata( $attachment->ID );
+
+			$items[] = array(
+				'type'          => 'trash',
+				'attachment_id' => $attachment->ID,
+				'title'         => get_the_title( $attachment->ID ),
+				'filename'      => $file_path ? basename( $file_path ) : '',
+				'mime_type'     => get_post_mime_type( $attachment->ID ),
+				'file_size'     => $file_path && file_exists( $file_path ) ? wp_filesize( $file_path ) : 0,
+				'upload_date'   => $attachment->post_date,
+				'thumbnail_url' => wp_get_attachment_image_url( $attachment->ID, 'thumbnail' ) ?: '',
+				'width'         => $metadata['width'] ?? 0,
+				'height'        => $metadata['height'] ?? 0,
+				'trashed_at'    => get_post_meta( $attachment->ID, '_wp_trash_meta_time', true ),
+			);
+		}
+
+		return rest_ensure_response(
+			array(
+				'items'       => $items,
+				'total'       => $trash_query->found_posts,
+				'page'        => $page,
+				'per_page'    => $per_page,
+				'total_pages' => (int) $trash_query->max_num_pages,
 			)
 		);
 	}
@@ -328,6 +400,7 @@ class ResultsController extends WP_REST_Controller {
 				'width'         => $metadata[ 'width' ] ?? 0,
 				'height'        => $metadata[ 'height' ] ?? 0,
 				'flagged_at'    => get_post_meta( $attachment->ID, '_vmfa_flagged_for_review', true ),
+				'is_flagged'    => true,
 			);
 		}
 

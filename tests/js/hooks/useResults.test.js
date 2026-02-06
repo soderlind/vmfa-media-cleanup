@@ -36,11 +36,17 @@ describe( 'useResults', () => {
 
 	it( 'fetches results on mount for non-duplicate type', async () => {
 		const fakeResponse = {
-			json: vi.fn().mockResolvedValue( [
-				{ id: 1, title: 'Image A' },
-				{ id: 2, title: 'Image B' },
-			] ),
-			headers: new Headers( { 'X-WP-Total': '2' } ),
+			json: vi.fn().mockResolvedValue( {
+				items: [
+					{ id: 1, title: 'Image A' },
+					{ id: 2, title: 'Image B' },
+				],
+				total: 2,
+				page: 1,
+				per_page: 20,
+				total_pages: 1,
+			} ),
+			headers: new Headers(),
 		};
 		apiFetch.mockResolvedValue( fakeResponse );
 
@@ -106,12 +112,18 @@ describe( 'useResults', () => {
 
 	it( 'selectAll selects all result ids', async () => {
 		const fakeResponse = {
-			json: vi.fn().mockResolvedValue( [
-				{ id: 1, title: 'A' },
-				{ id: 2, title: 'B' },
-				{ id: 3, title: 'C' },
-			] ),
-			headers: new Headers( { 'X-WP-Total': '3' } ),
+			json: vi.fn().mockResolvedValue( {
+				items: [
+					{ id: 1, title: 'A' },
+					{ id: 2, title: 'B' },
+					{ id: 3, title: 'C' },
+				],
+				total: 3,
+				page: 1,
+				per_page: 20,
+				total_pages: 1,
+			} ),
+			headers: new Headers(),
 		};
 		apiFetch.mockResolvedValue( fakeResponse );
 
@@ -171,8 +183,14 @@ describe( 'useResults', () => {
 
 	it( 'performAction calls the api and refreshes results', async () => {
 		const fakeResponse = {
-			json: vi.fn().mockResolvedValue( [ { id: 1, title: 'A' } ] ),
-			headers: new Headers( { 'X-WP-Total': '1' } ),
+			json: vi.fn().mockResolvedValue( {
+				items: [ { id: 1, title: 'A' } ],
+				total: 1,
+				page: 1,
+				per_page: 20,
+				total_pages: 1,
+			} ),
+			headers: new Headers(),
 		};
 		apiFetch.mockResolvedValue( fakeResponse );
 

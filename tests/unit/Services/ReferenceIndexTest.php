@@ -17,11 +17,11 @@ beforeEach( function () {
 	$this->wpdb         = Mockery::mock( 'wpdb' );
 	$this->wpdb->prefix = 'wp_';
 	$this->wpdb->posts  = 'wp_posts';
-	$GLOBALS['wpdb']    = $this->wpdb;
+	$GLOBALS[ 'wpdb' ]    = $this->wpdb;
 } );
 
 afterEach( function () {
-	unset( $GLOBALS['wpdb'] );
+	unset( $GLOBALS[ 'wpdb' ] );
 } );
 
 it( 'is_referenced returns true when attachment has references', function () {
@@ -84,7 +84,7 @@ it( 'add_reference inserts a single record', function () {
 			),
 			array( '%d', '%s', '%d' )
 		)
-		->andReturnUsing( function () use ( &$inserted ) {
+		->andReturnUsing( function () use (&$inserted) {
 			$inserted = true;
 			return true;
 		} );
@@ -117,7 +117,7 @@ it( 'add_references_batch inserts records in bulk', function () {
 
 	$this->wpdb->shouldReceive( 'query' )
 		->once()
-		->andReturnUsing( function () use ( &$query_executed ) {
+		->andReturnUsing( function () use (&$query_executed) {
 			$query_executed = true;
 			return 2;
 		} );
@@ -132,7 +132,7 @@ it( 'clear truncates the reference table', function () {
 	$this->wpdb->shouldReceive( 'query' )
 		->once()
 		->with( 'TRUNCATE TABLE wp_vmfa_media_references' )
-		->andReturnUsing( function () use ( &$truncated ) {
+		->andReturnUsing( function () use (&$truncated) {
 			$truncated = true;
 			return true;
 		} );
@@ -164,7 +164,7 @@ it( 'build_global_references indexes site icon and custom logo', function () {
 
 	$this->wpdb->shouldReceive( 'query' )
 		->once()
-		->andReturnUsing( function () use ( &$batch_inserted ) {
+		->andReturnUsing( function () use (&$batch_inserted) {
 			$batch_inserted = true;
 			return 2;
 		} );
@@ -177,15 +177,15 @@ it( 'build_global_references indexes site icon and custom logo', function () {
 it( 'build_global_references scans widgets for attachment references', function () {
 	Functions\when( 'get_option' )->alias( function ( $key, $default = false ) {
 		return match ( $key ) {
-			'site_icon'        => 0,
-			'sidebars_widgets' => array( 'sidebar-1' => array( 'media_image-2' ) ),
+			'site_icon'          => 0,
+			'sidebars_widgets'   => array( 'sidebar-1'   => array( 'media_image-2' ) ),
 			'widget_media_image' => array(
 				2 => array(
 					'attachment_id' => 55,
 					'url'           => 'http://example.com/wp-content/uploads/2024/01/photo.jpg',
 				),
 			),
-			default => $default,
+			default              => $default,
 		};
 	} );
 
@@ -215,7 +215,7 @@ it( 'build_global_references scans widgets for attachment references', function 
 
 	$this->wpdb->shouldReceive( 'query' )
 		->once()
-		->andReturnUsing( function () use ( &$batch_inserted ) {
+		->andReturnUsing( function () use (&$batch_inserted) {
 			$batch_inserted = true;
 			return 1;
 		} );
@@ -226,12 +226,12 @@ it( 'build_global_references scans widgets for attachment references', function 
 } );
 
 it( 'build_index_batch scans post content and featured images', function () {
-	$post1            = Mockery::mock( 'WP_Post' );
-	$post1->ID        = 10;
+	$post1               = Mockery::mock( 'WP_Post' );
+	$post1->ID           = 10;
 	$post1->post_content = '<!-- wp:image {"id":42} --><img class="wp-image-42" /><!-- /wp:image -->';
 
-	$post2            = Mockery::mock( 'WP_Post' );
-	$post2->ID        = 20;
+	$post2               = Mockery::mock( 'WP_Post' );
+	$post2->ID           = 20;
 	$post2->post_content = '';
 
 	Functions\expect( 'get_post_types' )
