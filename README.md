@@ -19,7 +19,7 @@ Add-on for [Virtual Media Folders](https://wordpress.org/plugins/virtual-media-f
 |-------------|---------|
 | WordPress | 6.8+ |
 | PHP | 8.3+ |
-| [Virtual Media Folders](https://wordpress.org/plugins/virtual-media-folders/ | active |
+| [Virtual Media Folders](https://wordpress.org/plugins/virtual-media-folders/) | active |
 
 ## Installation
 
