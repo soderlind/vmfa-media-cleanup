@@ -1,110 +1,71 @@
-# VMFA Media Cleanup
+# Virtual Media Folders — Media Cleanup
 
-Add-on for [Virtual Media Folders](https://github.com/soderlind/virtual-media-folders) — detect and manage unused, duplicate, and oversized media items.
+Add-on for [Virtual Media Folders](https://wordpress.org/plugins/virtual-media-folders/) that helps you find and manage unused, duplicate, and oversized media in your WordPress library.
+
+## Features
+
+- **Unused media detection** — deep content scanning across Gutenberg, classic editor, featured images, widgets, and custom meta keys.
+- **Duplicate detection** — SHA-256 file hashing with primary/copy management and one-click trash of non-primary copies.
+- **Oversized file detection** — configurable per-type thresholds (images, video, audio, documents).
+- **Non-destructive actions** — archive to a virtual folder, trash (with restore), or flag for review.
+- **Background scanning** — powered by Action Scheduler for large media libraries.
+- **Admin dashboard** — React-based UI with tabs for Scan, Unused, Duplicates, Oversized, Flagged, Trash, and Settings.
+- **WP-CLI support** — scan, list, archive, trash, flag, and manage duplicates from the command line.
+- **Internationalization** — fully translatable; ships with Norwegian Bokmål (nb_NO).
 
 ## Requirements
 
-- WordPress 6.8+
-- PHP 8.3+
-- Virtual Media Folders plugin (active)
+| Requirement | Version |
+|-------------|---------|
+| WordPress | 6.8+ |
+| PHP | 8.3+ |
+| [Virtual Media Folders](https://wordpress.org/plugins/virtual-media-folders/ | active |
 
-## Development
+## Installation
 
-### Install dependencies
 
-```bash
-composer install
-npm install
-```
+1. Download [`vmfa-media-cleanup.zip`](https://github.com/soderlind/vmfa-media-cleanup/releases/latest/download/vmfa-media-cleanup.zip)
+2. Upload via `Plugins → Add New → Upload Plugin`
+3. Activate via `WordPress Admin → Plugins`
 
-### Build assets
+Plugin [updates are handled automatically](https://github.com/soderlind/wordpress-plugin-github-updater#readme) via GitHub. No need to manually download and install updates.
 
-```bash
-npm run build
-```
+## Usage
 
-### Watch mode
+### Admin Dashboard
 
-```bash
-npm start
-```
+Navigate to **Media → Virtual Folders → Media Cleanup**. The dashboard has seven tabs:
 
-### PHP linting
+| Tab | Purpose |
+|-----|---------|
+| **Scan** | Start/monitor scans, view progress |
+| **Unused** | Media not referenced in any post content or featured image |
+| **Duplicates** | Groups of files sharing the same hash — set primary, trash copies |
+| **Oversized** | Files exceeding your configured size thresholds |
+| **Flagged** | Items you've manually flagged for later review |
+| **Trash** | Trashed items with restore/permanent-delete options |
+| **Settings** | Thresholds, scan depth, batch size, auto-scan, archive folder |
 
-```bash
-composer lint
-```
-
-### PHP tests
-
-```bash
-composer test
-```
-
-### JS tests
+### WP-CLI
 
 ```bash
-npm test
-```
-
-## WP-CLI Commands
-
-```bash
-# Run a full scan
-wp vmfa-cleanup scan
-
-# Run async scan
-wp vmfa-cleanup scan --async
-
-# List detected issues
+wp vmfa-cleanup scan              # Run a full scan
+wp vmfa-cleanup scan --async      # Run scan in background
 wp vmfa-cleanup list --type=unused
 wp vmfa-cleanup list --type=duplicate --format=csv
-wp vmfa-cleanup list --type=oversized --format=json
-
-# Show scan statistics
-wp vmfa-cleanup stats
-
-# Archive unused media
+wp vmfa-cleanup stats             # Show scan statistics
 wp vmfa-cleanup archive --type=unused --yes
-
-# Trash unused media
 wp vmfa-cleanup trash --type=unused --yes
-
-# Flag/unflag media
 wp vmfa-cleanup flag 42 56 78
 wp vmfa-cleanup unflag 42 56
-
-# List duplicate groups
-wp vmfa-cleanup duplicates
-
-# Recompute file hashes
-wp vmfa-cleanup rehash
+wp vmfa-cleanup duplicates        # List duplicate groups
+wp vmfa-cleanup rehash            # Recompute file hashes
 ```
 
-## Hooks & Filters
+## Developer Documentation
 
-### Actions
-
-| Action | Description |
-|--------|-------------|
-| `vmfa_cleanup_scan_complete` | Fires after a scan finishes |
-| `vmfa_cleanup_before_bulk_action` | Fires before any bulk action |
-| `vmfa_cleanup_media_archived` | Fires after archiving a media item |
-| `vmfa_cleanup_media_trashed` | Fires after trashing a media item |
-| `vmfa_cleanup_media_flagged` | Fires after flagging a media item |
-| `vmfa_cleanup_settings_updated` | Fires after settings are saved |
-
-### Filters
-
-| Filter | Description |
-|--------|-------------|
-| `vmfa_cleanup_is_unused` | Override whether an attachment is considered unused |
-| `vmfa_cleanup_oversized_thresholds` | Modify per-MIME-type size thresholds |
-| `vmfa_cleanup_archive_folder_name` | Change the archive folder name |
-| `vmfa_cleanup_hash_algorithm` | Change the hash algorithm (default: sha256) |
-| `vmfa_cleanup_reference_meta_keys` | Add meta keys for reference scanning |
-| `vmfa_cleanup_reference_sources` | Add custom reference sources |
+REST API reference, hooks/filters, project structure, and build instructions are in [docs/DEVELOPER.md](docs/DEVELOPER.md).
 
 ## License
 
-GPLv2 or later
+GPL-2.0-or-later

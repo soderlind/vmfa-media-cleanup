@@ -110,15 +110,15 @@ if ( ! class_exists( 'WP_Query' ) ) {
 		/** @var array Static override for test fixtures. */
 		public static $test_fixture = null;
 
-		public $posts         = array();
-		public $found_posts   = 0;
+		public $posts = array();
+		public $found_posts = 0;
 		public $max_num_pages = 0;
 
 		public function __construct( $args = array() ) {
 			if ( self::$test_fixture !== null ) {
-				$this->posts         = self::$test_fixture['posts'] ?? array();
-				$this->found_posts   = self::$test_fixture['found_posts'] ?? 0;
-				$this->max_num_pages = self::$test_fixture['max_num_pages'] ?? 0;
+				$this->posts         = self::$test_fixture[ 'posts' ] ?? array();
+				$this->found_posts   = self::$test_fixture[ 'found_posts' ] ?? 0;
+				$this->max_num_pages = self::$test_fixture[ 'max_num_pages' ] ?? 0;
 			}
 		}
 	}

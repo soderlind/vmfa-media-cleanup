@@ -176,7 +176,7 @@ class ResultsController extends WP_REST_Controller {
 
 		// Enrich items with flagged state.
 		foreach ( $items as &$item ) {
-			$att_id              = (int) ( $item[ 'attachment_id' ] ?? $item[ 'id' ] ?? 0 );
+			$att_id               = (int) ( $item[ 'attachment_id' ] ?? $item[ 'id' ] ?? 0 );
 			$item[ 'is_flagged' ] = $att_id > 0 && (bool) get_post_meta( $att_id, '_vmfa_flagged_for_review', true );
 		}
 		unset( $item );
@@ -291,7 +291,7 @@ class ResultsController extends WP_REST_Controller {
 		$reference_index = new ReferenceIndex();
 		foreach ( $groups as &$group ) {
 			foreach ( $group[ 'members' ] as &$member ) {
-				$refs                      = $reference_index->get_references( (int) $member[ 'attachment_id' ] );
+				$refs                        = $reference_index->get_references( (int) $member[ 'attachment_id' ] );
 				$member[ 'reference_count' ] = count( $refs );
 			}
 		}
@@ -345,8 +345,8 @@ class ResultsController extends WP_REST_Controller {
 				'file_size'     => $file_path && file_exists( $file_path ) ? wp_filesize( $file_path ) : 0,
 				'upload_date'   => $attachment->post_date,
 				'thumbnail_url' => wp_get_attachment_image_url( $attachment->ID, 'thumbnail' ) ?: '',
-				'width'         => $metadata['width'] ?? 0,
-				'height'        => $metadata['height'] ?? 0,
+				'width'         => $metadata[ 'width' ] ?? 0,
+				'height'        => $metadata[ 'height' ] ?? 0,
 				'trashed_at'    => get_post_meta( $attachment->ID, '_wp_trash_meta_time', true ),
 			);
 		}

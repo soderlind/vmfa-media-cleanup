@@ -130,7 +130,7 @@ it( 'delete_media requires confirmation', function () {
 
 	$result = $this->controller->delete_media( $request );
 
-	expect( $result )->toBeInstanceOf( WP_Error::class );
+	expect( $result )->toBeInstanceOf( WP_Error::class);
 } );
 
 it( 'delete_media permanently deletes confirmed items', function () {
