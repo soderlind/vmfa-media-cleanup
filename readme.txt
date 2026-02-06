@@ -1,5 +1,5 @@
 === Virtual Media Folders — Media Cleanup ===
-Contributors: suspended
+Contributors: PerS
 Tags: media, cleanup, unused, duplicates, virtual-media-folders
 Requires at least: 6.8
 Tested up to: 6.9

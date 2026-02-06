@@ -34,7 +34,7 @@ All endpoints use the `vmfa-cleanup/v1` namespace and require the `manage_option
 | `POST` | `/actions/archive` | Archive to virtual folder. Body: `{ "ids": [...], "confirm": true }` |
 | `POST` | `/actions/flag` | Flag for review. Body: `{ "ids": [...] }` |
 | `POST` | `/actions/unflag` | Remove flag. Body: `{ "ids": [...] }` |
-| `POST` | `/actions/set-primary` | Set primary in duplicate group. Body: `{ "group_hash": "...", "attachment_id": ... }` |
+| `POST` | `/actions/set-primary` | Set primary in duplicate group. Body: `{ "id": ..., "group_ids": [...] }` |
 
 ### Settings
 
@@ -49,12 +49,12 @@ All endpoints use the `vmfa-cleanup/v1` namespace and require the `manage_option
 
 | Hook | Parameters | Description |
 |------|------------|-------------|
-| `vmfa_cleanup_scan_complete` | — | Fires after a scan finishes |
+| `vmfa_cleanup_scan_complete` | `$results` | Fires after a scan finishes. `$results` is an array of scan results grouped by type. |
 | `vmfa_cleanup_before_bulk_action` | `$action`, `$ids` | Fires before any bulk action |
-| `vmfa_cleanup_media_archived` | `$attachment_id` | Fires after archiving a media item |
+| `vmfa_cleanup_media_archived` | `$attachment_id`, `$folder_id` | Fires after archiving a media item. `$folder_id` is the archive folder term ID. |
 | `vmfa_cleanup_media_trashed` | `$attachment_id` | Fires after trashing a media item |
 | `vmfa_cleanup_media_flagged` | `$attachment_id` | Fires after flagging a media item |
-| `vmfa_cleanup_settings_updated` | `$settings` | Fires after settings are saved |
+| `vmfa_cleanup_settings_updated` | `$updated`, `$current` | Fires after settings are saved. `$updated` is the new settings, `$current` is the previous settings. |
 
 ### Filters
 
@@ -97,9 +97,9 @@ add_filter( 'vmfa_cleanup_oversized_thresholds', function ( $thresholds ) {
 #### Run custom logic after a scan
 
 ```php
-add_action( 'vmfa_cleanup_scan_complete', function () {
-    // Send a Slack notification, write to a log, etc.
-    wp_mail( 'admin@example.com', 'Media scan complete', 'Check the Media Cleanup dashboard.' );
+add_action( 'vmfa_cleanup_scan_complete', function ( $results ) {
+    // $results contains scan results grouped by type.
+    wp_mail( 'admin@example.com', 'Media scan complete', count( $results ) . ' issues found.' );
 } );
 ```
 
@@ -113,10 +113,11 @@ vmfa-media-cleanup/
 │   │   ├── hooks/          # Custom hooks (useScanStatus, useResults, useSettings)
 │   │   └── index.js        # Entry point
 │   ├── php/
+│   │   ├── CLI/            # WP-CLI command registration
 │   │   ├── Detectors/      # UnusedDetector, DuplicateDetector, OversizedDetector
 │   │   ├── REST/           # ScanController, ResultsController, ActionsController, SettingsController
 │   │   ├── Services/       # ScanService, ReferenceIndex, HashService
-│   │   ├── CLI/            # WP-CLI command registration
+│   │   ├── Update/         # GitHubPluginUpdater
 │   │   └── Plugin.php      # Bootstrap class
 │   └── styles/
 │       └── admin.scss      # Admin dashboard styles
@@ -176,3 +177,21 @@ npm run i18n:make-pot # Extract strings only
 ```
 
 Individual steps: `i18n:make-pot`, `i18n:update-po`, `i18n:make-mo`, `i18n:make-json`, `i18n:make-php`.
+
+#### `i18n-map.json`
+
+The `make-json` step converts PO translations into JSON files that WordPress loads for JavaScript via `wp_set_script_translations()`. It needs to know which script handle each source file belongs to, so it can generate the correct filename hash.
+
+`i18n-map.json` maps every source JSX file that contains translatable strings to the script handle (`vmfa-media-cleanup-admin`):
+
+```json
+{
+  "src/js/components/BulkActionBar.jsx": "vmfa-media-cleanup-admin",
+  "src/js/components/CleanupDashboard.jsx": "vmfa-media-cleanup-admin",
+  ...
+}
+```
+
+The keys must use **source file paths** (not `build/index.js`), because the PO file's `#:` reference comments point to source files. WordPress computes the JSON filename as `{textdomain}-{locale}-{md5(handle)}.json`, so the map ensures the hash matches the handle registered with `wp_set_script_translations()`.
+
+When adding a new component that uses `__()` or `_n()`, add its path to this file.
