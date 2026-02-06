@@ -44,3 +44,13 @@ export const ExternalLink = ( { href, children, ...rest } ) => (
 		{ children }
 	</a>
 );
+
+export const Card = ( { children, className } ) => (
+	<div data-testid="card" className={ className }>
+		{ children }
+	</div>
+);
+
+export const CardBody = ( { children } ) => (
+	<div data-testid="card-body">{ children }</div>
+);

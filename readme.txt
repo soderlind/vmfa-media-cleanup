@@ -4,7 +4,7 @@ Tags: media, cleanup, unused, duplicates, virtual-media-folders
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.3
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,11 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 * Fixed: Settings panel error when fetch fails.
 * Fixed: SelectControl uppercase label — replaced with native select elements.
 * Fixed: Settings UI spacing and section styling.
+
+= 0.4.0 =
+* Added: StatsCard component showing Total Media, Unused, Duplicates, and Oversized counts at dashboard top.
+* Changed: Tabs now appear above the stats card (consistent with AI Organizer).
+* Removed: Inline stats from dashboard header (replaced by StatsCard).
 
 = 0.2.0 =
 * Added: Reference count display on duplicate group members.

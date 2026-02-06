@@ -72,6 +72,47 @@ $vmfa-thumb-size: 48px;
 	}
 }
 
+// ──────────────────────────────────────────
+// Stats Card
+// ──────────────────────────────────────────
+
+.vmfa-stats-card {
+	margin-bottom: 16px;
+
+	.components-card__body {
+		padding: 20px;
+	}
+}
+
+.vmfa-stats-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 24px;
+}
+
+.vmfa-stats-item {
+	text-align: center;
+}
+
+.vmfa-stats-value {
+	display: block;
+	font-size: 32px;
+	font-weight: 600;
+	line-height: 1.2;
+	color: $vmfa-text;
+
+	&--highlight {
+		color: $vmfa-primary;
+	}
+}
+
+.vmfa-stats-label {
+	display: block;
+	margin-top: 4px;
+	font-size: 13px;
+	color: $vmfa-text-muted;
+}
+
 .vmfa-cleanup-tab {
 	padding: 8px 16px;
 	border: 1px solid transparent;

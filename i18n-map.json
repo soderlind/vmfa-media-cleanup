@@ -6,5 +6,6 @@
 	"src/js/components/MediaItemRow.jsx": "vmfa-media-cleanup-admin",
 	"src/js/components/ResultsPanel.jsx": "vmfa-media-cleanup-admin",
 	"src/js/components/ScanProgress.jsx": "vmfa-media-cleanup-admin",
-	"src/js/components/SettingsPanel.jsx": "vmfa-media-cleanup-admin"
+	"src/js/components/SettingsPanel.jsx": "vmfa-media-cleanup-admin",
+	"src/js/components/StatsCard.jsx": "vmfa-media-cleanup-admin"
 }
