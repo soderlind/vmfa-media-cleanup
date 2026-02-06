@@ -13,6 +13,7 @@ import { useResults } from '../hooks/useResults';
 import { ScanProgress } from './ScanProgress';
 import { ResultsPanel } from './ResultsPanel';
 import { SettingsPanel } from './SettingsPanel';
+import { StatsCard } from './StatsCard';
 
 /**
  * Main dashboard component combining scan controls and results.
@@ -49,26 +50,6 @@ export function CleanupDashboard() {
 
 	return (
 		<div className="vmfa-cleanup-dashboard">
-			<div className="vmfa-cleanup-dashboard__header">
-				<h2>{ __( 'Media Cleanup', 'vmfa-media-cleanup' ) }</h2>
-				{ scan.stats && (
-					<div className="vmfa-cleanup-dashboard__stats">
-						<span className="vmfa-cleanup-stat">
-							{ __( 'Unused:', 'vmfa-media-cleanup' ) }{ ' ' }
-						<strong>{ scan.stats.unused_count ?? 0 }</strong>
-					</span>
-					<span className="vmfa-cleanup-stat">
-						{ __( 'Duplicates:', 'vmfa-media-cleanup' ) }{ ' ' }
-						<strong>{ scan.stats.duplicate_count ?? 0 }</strong>
-					</span>
-					<span className="vmfa-cleanup-stat">
-						{ __( 'Oversized:', 'vmfa-media-cleanup' ) }{ ' ' }
-						<strong>{ scan.stats.oversized_count ?? 0 }</strong>
-						</span>
-					</div>
-				) }
-			</div>
-
 			<nav className="vmfa-cleanup-dashboard__tabs" role="tablist">
 				{ tabs.map( ( tab ) => (
 					<button
@@ -84,6 +65,8 @@ export function CleanupDashboard() {
 					</button>
 				) ) }
 			</nav>
+
+			<StatsCard stats={ scan.stats } />
 
 			<div className="vmfa-cleanup-dashboard__content" role="tabpanel">
 				{ activeTab === 'scan' && <ScanProgress scan={ scan } /> }

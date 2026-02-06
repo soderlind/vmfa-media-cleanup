@@ -3,7 +3,7 @@
  * Plugin Name:       Virtual Media Folders - Media Cleanup
  * Plugin URI:        https://github.com/soderlind/vmfa-media-cleanup
  * Description:       Media maintenance add-on for Virtual Media Folders. Detect unused, duplicate, and oversized media — then archive, trash, or flag for review.
- * Version:           0.3.0
+ * Version:           0.4.0
  * Requires at least: 6.8
  * Requires PHP:      8.3
  * Requires Plugins:  virtual-media-folders

@@ -69,10 +69,10 @@ describe( 'CleanupDashboard', () => {
 		useSettings.mockReturnValue( baseSettingsState );
 	} );
 
-	it( 'renders the dashboard heading', () => {
+	it( 'renders the dashboard tabs', () => {
 		render( <CleanupDashboard /> );
 
-		expect( screen.getByText( 'Media Cleanup' ) ).toBeInTheDocument();
+		expect( screen.getByRole( 'tablist' ) ).toBeInTheDocument();
 	} );
 
 	it( 'renders seven tab buttons', () => {
