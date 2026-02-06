@@ -323,11 +323,14 @@ final class Plugin {
 
 		$asset = require $asset_file;
 
+		// Add vmfo-shared to dependencies for AddonShell components.
+		$dependencies = array_merge( $asset['dependencies'], array( 'vmfo-shared' ) );
+
 		wp_enqueue_script(
 			'vmfa-media-cleanup-admin',
 			VMFA_MEDIA_CLEANUP_URL . 'build/index.js',
-			$asset[ 'dependencies' ],
-			$asset[ 'version' ],
+			$dependencies,
+			$asset['version'],
 			true
 		);
 
@@ -340,8 +343,8 @@ final class Plugin {
 		wp_enqueue_style(
 			'vmfa-media-cleanup-admin',
 			VMFA_MEDIA_CLEANUP_URL . 'build/index.css',
-			array( 'wp-components' ),
-			$asset[ 'version' ]
+			array( 'wp-components', 'vmfo-shared' ),
+			$asset['version']
 		);
 
 		wp_localize_script(
