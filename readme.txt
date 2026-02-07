@@ -73,6 +73,16 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 
 == Changelog ==
 
+= 0.5.0 =
+* Changed: Integrated as subtab within parent plugin's settings page
+* Changed: Dashboard tabs (Scan, Duplicates, etc.) now appear under Media Cleanup subtab
+* Fixed: Version constant mismatch (was 0.3.0, now matches header 0.5.0)
+
+= 0.4.0 =
+* Added: StatsCard component showing Total Media, Unused, Duplicates, and Oversized counts at dashboard top.
+* Changed: Tabs now appear above the stats card (consistent with AI Organizer).
+* Removed: Inline stats from dashboard header (replaced by StatsCard).
+
 = 0.3.0 =
 * Added: Settings tab — oversized thresholds, scan depth, batch size, auto-scan, archive folder name.
 * Added: "Start Scan" button on empty result tabs.
@@ -80,11 +90,6 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 * Fixed: Settings panel error when fetch fails.
 * Fixed: SelectControl uppercase label — replaced with native select elements.
 * Fixed: Settings UI spacing and section styling.
-
-= 0.4.0 =
-* Added: StatsCard component showing Total Media, Unused, Duplicates, and Oversized counts at dashboard top.
-* Changed: Tabs now appear above the stats card (consistent with AI Organizer).
-* Removed: Inline stats from dashboard header (replaced by StatsCard).
 
 = 0.2.0 =
 * Added: Reference count display on duplicate group members.
