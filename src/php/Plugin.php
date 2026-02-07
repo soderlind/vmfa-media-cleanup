@@ -233,6 +233,15 @@ final class Plugin {
 		$tabs[ self::TAB_SLUG ] = array(
 			'title'    => __( 'Media Cleanup', 'vmfa-media-cleanup' ),
 			'callback' => array( $this, 'render_tab_content' ),
+			'subtabs'  => array(
+				'scan'      => __( 'Scan', 'vmfa-media-cleanup' ),
+				'unused'    => __( 'Unused', 'vmfa-media-cleanup' ),
+				'duplicate' => __( 'Duplicates', 'vmfa-media-cleanup' ),
+				'oversized' => __( 'Oversized', 'vmfa-media-cleanup' ),
+				'flagged'   => __( 'Flagged', 'vmfa-media-cleanup' ),
+				'trash'     => __( 'Trash', 'vmfa-media-cleanup' ),
+				'settings'  => __( 'Settings', 'vmfa-media-cleanup' ),
+			),
 		);
 		return $tabs;
 	}
@@ -240,13 +249,22 @@ final class Plugin {
 	/**
 	 * Render tab content within parent plugin's settings page.
 	 *
+	 * Subtab navigation is handled by the parent plugin.
+	 *
 	 * @param string $active_tab    The currently active tab slug.
 	 * @param string $active_subtab The currently active subtab slug.
 	 * @return void
 	 */
 	public function render_tab_content( string $active_tab, string $active_subtab ): void {
+		// Default to scan subtab.
+		if ( empty( $active_subtab ) ) {
+			$active_subtab = 'scan';
+		}
+
 		?>
-		<div id="vmfa-media-cleanup-app"></div>
+		<div class="vmfa-tab-content">
+			<div id="vmfa-media-cleanup-app" data-subtab="<?php echo esc_attr( $active_subtab ); ?>"></div>
+		</div>
 		<?php
 	}
 
@@ -323,14 +341,11 @@ final class Plugin {
 
 		$asset = require $asset_file;
 
-		// Add vmfo-shared to dependencies for AddonShell components.
-		$dependencies = array_merge( $asset['dependencies'], array( 'vmfo-shared' ) );
-
 		wp_enqueue_script(
 			'vmfa-media-cleanup-admin',
 			VMFA_MEDIA_CLEANUP_URL . 'build/index.js',
-			$dependencies,
-			$asset['version'],
+			$asset[ 'dependencies' ],
+			$asset[ 'version' ],
 			true
 		);
 
@@ -343,19 +358,20 @@ final class Plugin {
 		wp_enqueue_style(
 			'vmfa-media-cleanup-admin',
 			VMFA_MEDIA_CLEANUP_URL . 'build/index.css',
-			array( 'wp-components', 'vmfo-shared' ),
-			$asset['version']
+			array( 'wp-components' ),
+			$asset[ 'version' ]
 		);
 
 		wp_localize_script(
 			'vmfa-media-cleanup-admin',
 			'vmfaMediaCleanup',
 			array(
-				'restUrl'  => rest_url( 'vmfa-cleanup/v1/' ),
-				'nonce'    => wp_create_nonce( 'wp_rest' ),
-				'settings' => $this->get_settings(),
-				'folders'  => $this->get_folders(),
-				'adminUrl' => admin_url(),
+				'restUrl'      => rest_url( 'vmfa-cleanup/v1/' ),
+				'nonce'        => wp_create_nonce( 'wp_rest' ),
+				'settings'     => $this->get_settings(),
+				'folders'      => $this->get_folders(),
+				'adminUrl'     => admin_url(),
+				'activeSubtab' => isset( $_GET[ 'subtab' ] ) ? sanitize_key( $_GET[ 'subtab' ] ) : 'scan', // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			)
 		);
 	}
