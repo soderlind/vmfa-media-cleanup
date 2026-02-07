@@ -1,8 +1,11 @@
 /**
  * Tests for CleanupDashboard component.
+ *
+ * Tab navigation is now handled by PHP (nav-tab-wrapper).
+ * The component reads activeSubtab from window.vmfaMediaCleanup.
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 // Mock the hooks before importing the component.
@@ -62,111 +65,118 @@ const baseSettingsState = {
 	updateField: vi.fn(),
 };
 
+/**
+ * Helper to set the active subtab via window global.
+ *
+ * @param {string} subtab - The subtab to activate.
+ */
+function setActiveSubtab( subtab ) {
+	window.vmfaMediaCleanup = { activeSubtab: subtab };
+}
+
 describe( 'CleanupDashboard', () => {
 	beforeEach( () => {
 		useScanStatus.mockReturnValue( baseScan );
 		useResults.mockReturnValue( baseResultsState );
 		useSettings.mockReturnValue( baseSettingsState );
+		// Default to scan tab.
+		setActiveSubtab( 'scan' );
 	} );
 
-	it( 'renders the dashboard tabs', () => {
+	afterEach( () => {
+		delete window.vmfaMediaCleanup;
+	} );
+
+	it( 'renders the dashboard with tabpanel role', () => {
 		render( <CleanupDashboard /> );
 
-		expect( screen.getByRole( 'tablist' ) ).toBeInTheDocument();
+		expect( screen.getByRole( 'tabpanel' ) ).toBeInTheDocument();
 	} );
 
-	it( 'renders seven tab buttons', () => {
-		render( <CleanupDashboard /> );
-
-		expect( screen.getByText( 'Scan' ) ).toBeInTheDocument();
-		expect( screen.getByText( 'Unused' ) ).toBeInTheDocument();
-		expect( screen.getByText( 'Duplicates' ) ).toBeInTheDocument();
-		expect( screen.getByText( 'Oversized' ) ).toBeInTheDocument();
-		expect( screen.getByText( 'Flagged' ) ).toBeInTheDocument();
-		expect( screen.getByText( 'Trash' ) ).toBeInTheDocument();
-		expect( screen.getByText( 'Settings' ) ).toBeInTheDocument();
-	} );
-
-	it( 'shows scan tab as active by default', () => {
-		render( <CleanupDashboard /> );
-
-		const scanTab = screen.getByText( 'Scan' );
-		expect( scanTab ).toHaveAttribute( 'aria-selected', 'true' );
-	} );
-
-	it( 'switches to unused tab on click and calls setType', () => {
-		const setType = vi.fn();
-		const clearSelection = vi.fn();
-		useResults.mockReturnValue( { ...baseResultsState, setType, clearSelection } );
-
-		render( <CleanupDashboard /> );
-
-		fireEvent.click( screen.getByText( 'Unused' ) );
-
-		expect( screen.getByText( 'Unused' ) ).toHaveAttribute( 'aria-selected', 'true' );
-		expect( setType ).toHaveBeenCalledWith( 'unused' );
-		expect( clearSelection ).toHaveBeenCalledOnce();
-	} );
-
-	it( 'shows scan panel content when scan tab is active', () => {
+	it( 'renders scan content by default', () => {
 		render( <CleanupDashboard /> );
 
 		// ScanProgress renders a Start Scan button when idle.
 		expect( screen.getByText( 'Start Scan' ) ).toBeInTheDocument();
 	} );
 
-	it( 'shows scan-required message when a result tab is clicked without scan', () => {
+	it( 'defaults to scan tab when no activeSubtab is set', () => {
+		delete window.vmfaMediaCleanup;
+
 		render( <CleanupDashboard /> );
 
-		fireEvent.click( screen.getByText( 'Unused' ) );
+		expect( screen.getByText( 'Start Scan' ) ).toBeInTheDocument();
+	} );
+
+	it( 'calls setType and clearSelection when unused tab is active', () => {
+		const setType = vi.fn();
+		const clearSelection = vi.fn();
+		useResults.mockReturnValue( { ...baseResultsState, setType, clearSelection } );
+		setActiveSubtab( 'unused' );
+
+		render( <CleanupDashboard /> );
+
+		expect( setType ).toHaveBeenCalledWith( 'unused' );
+		expect( clearSelection ).toHaveBeenCalledOnce();
+	} );
+
+	it( 'shows scan panel content when scan tab is active', () => {
+		setActiveSubtab( 'scan' );
+
+		render( <CleanupDashboard /> );
+
+		// ScanProgress renders a Start Scan button when idle.
+		expect( screen.getByText( 'Start Scan' ) ).toBeInTheDocument();
+	} );
+
+	it( 'shows scan-required message when unused tab is active without scan', () => {
+		setActiveSubtab( 'unused' );
+
+		render( <CleanupDashboard /> );
 
 		expect( screen.getByText( 'Run a scan first to detect items.' ) ).toBeInTheDocument();
 		expect( screen.getByRole( 'button', { name: /Start Scan/i } ) ).toBeInTheDocument();
 	} );
 
-	it( 'starts scan and navigates to scan tab when Start Scan is clicked', () => {
+	it( 'calls startScan when Start Scan button is clicked on result tab', () => {
 		const startScan = vi.fn();
 		useScanStatus.mockReturnValue( { ...baseScan, startScan } );
+		setActiveSubtab( 'unused' );
 
 		render( <CleanupDashboard /> );
 
-		fireEvent.click( screen.getByText( 'Unused' ) );
 		fireEvent.click( screen.getByRole( 'button', { name: /Start Scan/i } ) );
 
 		expect( startScan ).toHaveBeenCalledOnce();
-		expect( screen.getByText( 'Scan' ) ).toHaveAttribute( 'aria-selected', 'true' );
 	} );
 
-	it( 'shows results panel when scan is complete', () => {
+	it( 'shows results panel when scan is complete on unused tab', () => {
 		useScanStatus.mockReturnValue( { ...baseScan, status: 'complete' } );
+		setActiveSubtab( 'unused' );
 
 		render( <CleanupDashboard /> );
-
-		fireEvent.click( screen.getByText( 'Unused' ) );
 
 		expect( screen.getByText( 'No items found.' ) ).toBeInTheDocument();
 		expect( screen.queryByText( 'Run a scan first to detect items.' ) ).not.toBeInTheDocument();
 	} );
 
 	it( 'shows trash results without requiring a scan', () => {
-		render( <CleanupDashboard /> );
+		setActiveSubtab( 'trash' );
 
-		fireEvent.click( screen.getByText( 'Trash' ) );
+		render( <CleanupDashboard /> );
 
 		expect( screen.getByText( 'No items found.' ) ).toBeInTheDocument();
 		expect( screen.queryByText( 'Run a scan first to detect items.' ) ).not.toBeInTheDocument();
 	} );
 
-	it( 'switches to trash tab and calls setType', () => {
+	it( 'calls setType with trash when trash tab is active', () => {
 		const setType = vi.fn();
 		const clearSelection = vi.fn();
 		useResults.mockReturnValue( { ...baseResultsState, setType, clearSelection } );
+		setActiveSubtab( 'trash' );
 
 		render( <CleanupDashboard /> );
 
-		fireEvent.click( screen.getByText( 'Trash' ) );
-
-		expect( screen.getByText( 'Trash' ) ).toHaveAttribute( 'aria-selected', 'true' );
 		expect( setType ).toHaveBeenCalledWith( 'trash' );
 		expect( clearSelection ).toHaveBeenCalledOnce();
 	} );
@@ -190,11 +200,12 @@ describe( 'CleanupDashboard', () => {
 		expect( screen.queryByText( 'Unused:' ) ).not.toBeInTheDocument();
 	} );
 
-	it( 'switches to settings tab and shows settings panel', () => {
+	it( 'shows settings panel when settings tab is active', () => {
+		setActiveSubtab( 'settings' );
+
 		render( <CleanupDashboard /> );
 
-		fireEvent.click( screen.getByText( 'Settings' ) );
-
-		expect( screen.getByText( 'Settings' ) ).toHaveAttribute( 'aria-selected', 'true' );
+		// SettingsPanel shows loading state initially.
+		expect( screen.getByRole( 'tabpanel' ) ).toBeInTheDocument();
 	} );
 } );
