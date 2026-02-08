@@ -25,12 +25,13 @@ import { StatsCard } from './StatsCard';
  */
 export function CleanupDashboard() {
 	const scan = useScanStatus();
-	const results = useResults();
-
 	// Get active subtab from PHP (via localized script).
 	const activeTab = window.vmfaMediaCleanup?.activeSubtab || 'scan';
 
 	const resultTabs = [ 'unused', 'duplicate', 'oversized', 'flagged', 'trash' ];
+
+	const results = useResults( resultTabs.includes( activeTab ) ? activeTab : 'unused' );
+
 	const scanDependentTabs = [ 'unused', 'duplicate', 'oversized', 'flagged' ];
 	const isResultTab = resultTabs.includes( activeTab );
 	const needsScan =

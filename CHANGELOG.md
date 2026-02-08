@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-02-08
+
+### Added
+
+- Trashed items now display a "Trashed" badge in Unused and Duplicates tabs
+- `_vmfa_trashed` meta marker set when trashing via plugin, removed on restore
+- Race condition guard (`requestIdRef`) in `useResults` hook discards superseded API responses
+- No-cache headers (`Cache-Control`, `Pragma`, `Expires`) on all plugin REST responses
+- Asset versioning includes `filemtime()` for aggressive browser cache busting
+- Results enriched with `is_trashed` and `is_flagged` state from live DB
+- Deleted/missing attachments filtered out of results and duplicate groups
+
+### Fixed
+
+- Trash tab showed all WP-trashed attachments instead of only plugin-trashed items
+- Trash tab race condition: stale unused-type response overwrote correct empty trash response
+- `useResults` hook initialised with wrong type, causing redundant initial fetch
+- Oversized detector used wrong settings keys (`image_size_threshold` instead of `oversized_threshold_image`), ignoring user-configured thresholds
+- Oversized detector fallback thresholds mismatched `SettingsController` defaults (video: 50 MB → 100 MB, audio: 10 MB → 20 MB)
+
 ## [0.5.0] - 2026-02-07
 
 ### Changed

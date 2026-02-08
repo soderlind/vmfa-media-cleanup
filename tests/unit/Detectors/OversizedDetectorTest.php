@@ -151,8 +151,8 @@ it( 'uses different thresholds per mime type', function () {
 		->with( 'vmfa_media_cleanup_settings', array() )
 		->andReturn(
 			array(
-				'image_size_threshold' => $image_thresh,
-				'video_size_threshold' => $video_thresh,
+				'oversized_threshold_image' => $image_thresh,
+				'oversized_threshold_video' => $video_thresh,
 			)
 		);
 
@@ -224,7 +224,7 @@ it( 'uses document threshold for unknown mime types', function () {
 
 	Functions\expect( 'get_option' )
 		->with( 'vmfa_media_cleanup_settings', array() )
-		->andReturn( array( 'document_size_threshold' => $doc_thresh ) );
+		->andReturn( array( 'oversized_threshold_document' => $doc_thresh ) );
 
 	Functions\expect( 'apply_filters' )
 		->with( 'vmfa_cleanup_oversized_thresholds', Mockery::type( 'array' ) )

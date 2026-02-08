@@ -264,6 +264,8 @@ class ActionsController extends WP_REST_Controller {
 				// Store original status and trash time for restore.
 				update_post_meta( $attachment_id, '_wp_trash_meta_status', $attachment->post_status );
 				update_post_meta( $attachment_id, '_wp_trash_meta_time', time() );
+				// Mark as trashed by this plugin (for filtering in Trash tab).
+				update_post_meta( $attachment_id, '_vmfa_trashed', '1' );
 
 				$result = wp_update_post(
 					array(
@@ -328,6 +330,7 @@ class ActionsController extends WP_REST_Controller {
 			if ( $result && ! is_wp_error( $result ) ) {
 				delete_post_meta( $attachment_id, '_wp_trash_meta_status' );
 				delete_post_meta( $attachment_id, '_wp_trash_meta_time' );
+				delete_post_meta( $attachment_id, '_vmfa_trashed' );
 				++$success;
 
 				/**

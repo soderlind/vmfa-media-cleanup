@@ -80,7 +80,7 @@ describe( 'useResults', () => {
 		expect( result.current.duplicateGroups ).toEqual( groups );
 		expect( apiFetch ).toHaveBeenCalledWith(
 			expect.objectContaining( {
-				path: '/vmfa-cleanup/v1/duplicates',
+				path: expect.stringContaining( '/vmfa-cleanup/v1/duplicates' ),
 			} )
 		);
 	} );

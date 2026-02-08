@@ -49,6 +49,7 @@ export function MediaItemRow( {
 	const [ confirmAction, setConfirmAction ] = useState( null );
 	const [ isFlagged, setIsFlagged ] = useState( !! item.is_flagged || type === 'flagged' );
 	const id = item.id || item.attachment_id;
+	const isTrashed = !! item.is_trashed || type === 'trash';
 
 	const handleAction = ( action ) => {
 		if ( action === 'trash' || action === 'delete' ) {
@@ -68,7 +69,7 @@ export function MediaItemRow( {
 		<div
 			className={ `vmfa-cleanup-item ${
 				isSelected ? 'is-selected' : ''
-			}` }
+			}${ isTrashed ? ' is-trashed' : '' }` }
 		>
 			<div className="vmfa-cleanup-item__checkbox">
 				<input
@@ -117,11 +118,16 @@ export function MediaItemRow( {
 							{ formatSize( item.over_by ) }
 						</span>
 					) }
+					{ isTrashed && type !== 'trash' && (
+						<span className="vmfa-cleanup-item__badge vmfa-cleanup-item__badge--trashed">
+							{ __( 'Trashed', 'vmfa-media-cleanup' ) }
+						</span>
+					) }
 				</div>
 			</div>
 
 			<div className="vmfa-cleanup-item__actions">
-				{ type === 'trash' ? (
+				{ isTrashed ? (
 					<>
 						<Button
 							icon={ backup }

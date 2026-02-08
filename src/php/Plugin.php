@@ -341,11 +341,17 @@ final class Plugin {
 
 		$asset = require $asset_file;
 
+		// Append file modification time to version hash to bust aggressive caches.
+		$js_file     = VMFA_MEDIA_CLEANUP_PATH . 'build/index.js';
+		$css_file    = VMFA_MEDIA_CLEANUP_PATH . 'build/index.css';
+		$js_version  = $asset[ 'version' ] . '.' . ( file_exists( $js_file ) ? filemtime( $js_file ) : '' );
+		$css_version = $asset[ 'version' ] . '.' . ( file_exists( $css_file ) ? filemtime( $css_file ) : '' );
+
 		wp_enqueue_script(
 			'vmfa-media-cleanup-admin',
 			VMFA_MEDIA_CLEANUP_URL . 'build/index.js',
 			$asset[ 'dependencies' ],
-			$asset[ 'version' ],
+			$js_version,
 			true
 		);
 
@@ -359,7 +365,7 @@ final class Plugin {
 			'vmfa-media-cleanup-admin',
 			VMFA_MEDIA_CLEANUP_URL . 'build/index.css',
 			array( 'wp-components' ),
-			$asset[ 'version' ]
+			$css_version
 		);
 
 		wp_localize_script(
