@@ -4,7 +4,7 @@
  * @package VmfaMediaCleanup
  */
 
-import { useState, useCallback, useEffect } from '@wordpress/element';
+import { useState, useCallback, useEffect, useRef } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 
 /**
@@ -24,7 +24,11 @@ export function useResults( initialType = 'unused' ) {
 	const [ selected, setSelected ] = useState( [] );
 	const [ duplicateGroups, setDuplicateGroups ] = useState( [] );
 
+	// Guard against race conditions: only the latest request updates state.
+	const requestIdRef = useRef( 0 );
+
 	const fetchResults = useCallback( async () => {
+		const requestId = ++requestIdRef.current;
 		setLoading( true );
 		setError( null );
 
@@ -33,6 +37,7 @@ export function useResults( initialType = 'unused' ) {
 				type,
 				page: String( page ),
 				per_page: String( perPage ),
+				_: String( Date.now() ), // Cache buster.
 			} );
 
 			const data = await apiFetch( {
@@ -42,28 +47,49 @@ export function useResults( initialType = 'unused' ) {
 
 			const json = await data.json();
 
+			// Ignore stale responses from superseded requests.
+			if ( requestId !== requestIdRef.current ) {
+				return;
+			}
+
 			setResults( json.items ?? json );
 			setTotal( json.total ?? ( json.items ? json.items.length : json.length ) );
 		} catch ( err ) {
+			if ( requestId !== requestIdRef.current ) {
+				return;
+			}
 			setError( err.message || 'Failed to fetch results.' );
 		} finally {
-			setLoading( false );
+			if ( requestId === requestIdRef.current ) {
+				setLoading( false );
+			}
 		}
 	}, [ type, page, perPage ] );
 
 	const fetchDuplicateGroups = useCallback( async () => {
+		const requestId = ++requestIdRef.current;
 		setLoading( true );
 		setError( null );
 
 		try {
 			const data = await apiFetch( {
-				path: '/vmfa-cleanup/v1/duplicates',
+				path: `/vmfa-cleanup/v1/duplicates?_=${ Date.now() }`,
 			} );
+
+			if ( requestId !== requestIdRef.current ) {
+				return;
+			}
+
 			setDuplicateGroups( data.groups ?? data );
 		} catch ( err ) {
+			if ( requestId !== requestIdRef.current ) {
+				return;
+			}
 			setError( err.message || 'Failed to fetch duplicate groups.' );
 		} finally {
-			setLoading( false );
+			if ( requestId === requestIdRef.current ) {
+				setLoading( false );
+			}
 		}
 	}, [] );
 
@@ -111,6 +137,13 @@ export function useResults( initialType = 'unused' ) {
 		setSelected( [] );
 	}, [] );
 
+	// Clear stale results immediately when type changes.
+	useEffect( () => {
+		setResults( [] );
+		setTotal( 0 );
+		setSelected( [] );
+	}, [ type ] );
+
 	// Fetch when type or page changes.
 	useEffect( () => {
 		if ( type === 'duplicate' ) {
@@ -118,7 +151,7 @@ export function useResults( initialType = 'unused' ) {
 		} else {
 			fetchResults();
 		}
-	}, [ type, page, perPage ] ); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [ type, page, perPage, fetchResults, fetchDuplicateGroups ] );
 
 	return {
 		results,

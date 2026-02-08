@@ -30,6 +30,34 @@ class ResultsController extends WP_REST_Controller {
 	protected $namespace = 'vmfa-cleanup/v1';
 
 	/**
+	 * Constructor - add filter to prevent caching of REST responses.
+	 */
+	public function __construct() {
+		add_filter( 'rest_post_dispatch', array( $this, 'add_no_cache_headers' ), 10, 3 );
+	}
+
+	/**
+	 * Add no-cache headers to our REST responses.
+	 *
+	 * @param WP_REST_Response $response The response object.
+	 * @param WP_REST_Server   $server   The REST server.
+	 * @param WP_REST_Request  $request  The request object.
+	 * @return WP_REST_Response
+	 */
+	public function add_no_cache_headers( $response, $server, $request ): WP_REST_Response {
+		$route = $request->get_route();
+
+		// Only add headers to our plugin's routes.
+		if ( str_starts_with( $route, '/' . $this->namespace ) ) {
+			$response->header( 'Cache-Control', 'no-cache, no-store, must-revalidate' );
+			$response->header( 'Pragma', 'no-cache' );
+			$response->header( 'Expires', '0' );
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Register routes.
 	 *
 	 * @return void
@@ -161,6 +189,18 @@ class ResultsController extends WP_REST_Controller {
 		$all_results = get_option( 'vmfa_cleanup_results', array() );
 		$items       = $all_results[ $type ] ?? array();
 
+		// Filter out deleted items and verify attachments still exist.
+		$items = array_filter( $items, function ( $item, $key ) {
+			$att_id = (int) ( $item[ 'attachment_id' ] ?? $item[ 'id' ] ?? $key );
+			if ( $att_id <= 0 ) {
+				return false;
+			}
+			// Clear cache and check if post exists.
+			clean_post_cache( $att_id );
+			$post = get_post( $att_id );
+			return $post && 'attachment' === $post->post_type;
+		}, ARRAY_FILTER_USE_BOTH );
+
 		// Sort.
 		usort( $items, function ( $a, $b ) use ( $orderby, $order ) {
 			$val_a = $a[ $orderby ] ?? '';
@@ -174,10 +214,12 @@ class ResultsController extends WP_REST_Controller {
 		$total = count( $items );
 		$items = array_slice( $items, ( $page - 1 ) * $per_page, $per_page );
 
-		// Enrich items with flagged state.
-		foreach ( $items as &$item ) {
-			$att_id               = (int) ( $item[ 'attachment_id' ] ?? $item[ 'id' ] ?? 0 );
+		// Enrich items with flagged and trashed state (fresh from DB).
+		foreach ( $items as $key => &$item ) {
+			$att_id               = (int) ( $item[ 'attachment_id' ] ?? $item[ 'id' ] ?? $key );
+			$post_status          = get_post_field( 'post_status', $att_id );
 			$item[ 'is_flagged' ] = $att_id > 0 && (bool) get_post_meta( $att_id, '_vmfa_flagged_for_review', true );
+			$item[ 'is_trashed' ] = 'trash' === $post_status;
 		}
 		unset( $item );
 
@@ -287,15 +329,34 @@ class ResultsController extends WP_REST_Controller {
 		$detector = new DuplicateDetector( new \VmfaMediaCleanup\Services\HashService() );
 		$groups   = $detector->get_groups( $duplicate_results );
 
-		// Enrich members with reference counts.
+		// Enrich members with reference counts and trashed state (clear cache for fresh data).
 		$reference_index = new ReferenceIndex();
 		foreach ( $groups as &$group ) {
+			// Filter out deleted members.
+			$group[ 'members' ] = array_filter( $group[ 'members' ], function ( $member ) {
+				$att_id = (int) $member[ 'attachment_id' ];
+				clean_post_cache( $att_id );
+				$post = get_post( $att_id );
+				return $post && 'attachment' === $post->post_type;
+			} );
+
 			foreach ( $group[ 'members' ] as &$member ) {
-				$refs                        = $reference_index->get_references( (int) $member[ 'attachment_id' ] );
+				$att_id                      = (int) $member[ 'attachment_id' ];
+				$refs                        = $reference_index->get_references( $att_id );
 				$member[ 'reference_count' ] = count( $refs );
+				$member[ 'is_trashed' ]      = 'trash' === get_post_field( 'post_status', $att_id );
 			}
+
+			// Re-index members array.
+			$group[ 'members' ] = array_values( $group[ 'members' ] );
 		}
 		unset( $group, $member );
+
+		// Filter out groups with less than 2 members (no longer duplicates).
+		$groups = array_filter( $groups, function ( $group ) {
+			return count( $group[ 'members' ] ) >= 2;
+		} );
+		$groups = array_values( $groups );
 
 		// Paginate groups.
 		$total  = count( $groups );
@@ -320,16 +381,33 @@ class ResultsController extends WP_REST_Controller {
 	 * @return WP_REST_Response
 	 */
 	private function get_trash_results( int $page, int $per_page ): WP_REST_Response {
+		// Disable object cache for fresh results.
+		wp_suspend_cache_addition( true );
+
+		// Only show items trashed by this plugin (have _vmfa_trashed meta).
 		$trash_query = new \WP_Query(
 			array(
-				'post_type'      => 'attachment',
-				'post_status'    => 'trash',
-				'posts_per_page' => $per_page,
-				'paged'          => $page,
-				'orderby'        => 'date',
-				'order'          => 'DESC',
+				'post_type'              => 'attachment',
+				'post_status'            => 'trash',
+				'posts_per_page'         => $per_page,
+				'paged'                  => $page,
+				'orderby'                => 'date',
+				'order'                  => 'DESC',
+				'suppress_filters'       => false,
+				'cache_results'          => false,
+				'update_post_meta_cache' => true,
+				'update_post_term_cache' => false,
+				'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					array(
+						'key'     => '_vmfa_trashed',
+						'value'   => '1',
+						'compare' => '=',
+					),
+				),
 			)
 		);
+
+		wp_suspend_cache_addition( false );
 
 		$items = array();
 		foreach ( $trash_query->posts as $attachment ) {

@@ -90,10 +90,10 @@ class OversizedDetector implements DetectorInterface {
 		$settings = get_option( 'vmfa_media_cleanup_settings', array() );
 
 		$thresholds = array(
-			'image'    => $settings[ 'image_size_threshold' ] ?? 2097152,
-			'video'    => $settings[ 'video_size_threshold' ] ?? 52428800,
-			'audio'    => $settings[ 'audio_size_threshold' ] ?? 10485760,
-			'document' => $settings[ 'document_size_threshold' ] ?? 10485760,
+			'image'    => $settings[ 'oversized_threshold_image' ] ?? 2097152,
+			'video'    => $settings[ 'oversized_threshold_video' ] ?? 104857600,
+			'audio'    => $settings[ 'oversized_threshold_audio' ] ?? 20971520,
+			'document' => $settings[ 'oversized_threshold_document' ] ?? 10485760,
 		);
 
 		/**

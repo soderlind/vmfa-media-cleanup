@@ -44,28 +44,29 @@ msgid "Duplicate"
 msgstr "Duplikat"
 
 #: src/php/Detectors/OversizedDetector.php:34
-#: src/js/components/CleanupDashboard.jsx:44
+#: src/php/Plugin.php:240
+#: src/js/components/StatsCard.jsx:55
 msgid "Oversized"
 msgstr "For store"
 
 #: src/php/Detectors/UnusedDetector.php:53
-#: src/js/components/CleanupDashboard.jsx:42
+#: src/php/Plugin.php:238
+#: src/js/components/StatsCard.jsx:39
 msgid "Unused"
 msgstr "Ubrukt"
 
 #: src/php/Plugin.php:234
-#: src/php/Plugin.php:277
-#: src/js/components/CleanupDashboard.jsx:53
+#: src/php/Plugin.php:295
 msgid "Media Cleanup"
 msgstr "Medieopprydding"
 
-#: src/php/Plugin.php:276
-#: src/php/Plugin.php:292
+#: src/php/Plugin.php:294
+#: src/php/Plugin.php:310
 msgid "Virtual Media Folders Media Cleanup"
 msgstr "Virtual Media Folders Medieopprydding"
 
 #: src/php/REST/ActionsController.php:159
-#: src/php/REST/ResultsController.php:131
+#: src/php/REST/ResultsController.php:159
 #: src/php/REST/ScanController.php:128
 #: src/php/REST/SettingsController.php:93
 msgid "You do not have permission to access this resource."
@@ -73,11 +74,11 @@ msgstr "Du har ikke tilgang til denne ressursen."
 
 #: src/php/REST/ActionsController.php:176
 #: src/php/REST/ActionsController.php:243
-#: src/php/REST/ActionsController.php:363
+#: src/php/REST/ActionsController.php:366
 msgid "Action requires confirmation. Set confirm to true."
 msgstr "Handlingen krever bekreftelse. Sett bekreft til sann."
 
-#: src/php/REST/ResultsController.php:208
+#: src/php/REST/ResultsController.php:250
 msgid "Attachment not found."
 msgstr "Vedlegget ble ikke funnet."
 
@@ -94,13 +95,13 @@ msgid "selected"
 msgstr "valgt"
 
 #: src/js/components/BulkActionBar.jsx:54
-#: src/js/components/MediaItemRow.jsx:128
+#: src/js/components/MediaItemRow.jsx:134
 msgid "Restore"
 msgstr "Gjenopprett"
 
 #: src/js/components/BulkActionBar.jsx:63
 #: src/js/components/ConfirmModal.jsx:25
-#: src/js/components/MediaItemRow.jsx:134
+#: src/js/components/MediaItemRow.jsx:140
 msgid "Delete permanently"
 msgstr "Slett permanent"
 
@@ -109,20 +110,20 @@ msgid "Flag"
 msgstr "Flagg"
 
 #: src/js/components/BulkActionBar.jsx:83
-#: src/js/components/MediaItemRow.jsx:145
+#: src/js/components/MediaItemRow.jsx:151
 msgid "Unflag"
 msgstr "Fjern flagg"
 
 #: src/js/components/BulkActionBar.jsx:92
 #: src/js/components/ConfirmModal.jsx:24
-#: src/js/components/MediaItemRow.jsx:153
+#: src/js/components/MediaItemRow.jsx:159
 #: src/js/components/SettingsPanel.jsx:220
 msgid "Archive"
 msgstr "Arkiver"
 
+#: src/php/Plugin.php:242
 #: src/js/components/BulkActionBar.jsx:101
-#: src/js/components/CleanupDashboard.jsx:46
-#: src/js/components/MediaItemRow.jsx:159
+#: src/js/components/MediaItemRow.jsx:165
 msgid "Trash"
 msgstr "Papirkurv"
 
@@ -130,39 +131,28 @@ msgstr "Papirkurv"
 msgid "Clear"
 msgstr "Tøm"
 
-#: src/js/components/CleanupDashboard.jsx:41
+#: src/php/Plugin.php:237
 msgid "Scan"
 msgstr "Skann"
 
-#: src/js/components/CleanupDashboard.jsx:43
+#: src/php/Plugin.php:239
+#: src/js/components/StatsCard.jsx:47
 msgid "Duplicates"
 msgstr "Duplikater"
 
-#: src/js/components/CleanupDashboard.jsx:45
+#: src/php/Plugin.php:241
 msgid "Flagged"
 msgstr "Flagget"
 
-#: src/js/components/CleanupDashboard.jsx:47
+#: src/php/Plugin.php:243
 msgid "Settings"
 msgstr "Innstillinger"
 
-#: src/js/components/CleanupDashboard.jsx:57
-msgid "Unused:"
-msgstr "Ubrukt:"
-
-#: src/js/components/CleanupDashboard.jsx:61
-msgid "Duplicates:"
-msgstr "Duplikater:"
-
-#: src/js/components/CleanupDashboard.jsx:65
-msgid "Oversized:"
-msgstr "For store:"
-
-#: src/js/components/CleanupDashboard.jsx:92
+#: src/js/components/CleanupDashboard.jsx:66
 msgid "Run a scan first to detect items."
 msgstr "Kjør en skanning først for å oppdage elementer."
 
-#: src/js/components/CleanupDashboard.jsx:101
+#: src/js/components/CleanupDashboard.jsx:79
 #: src/js/components/ScanProgress.jsx:72
 msgid "Start Scan"
 msgstr "Start skanning"
@@ -232,33 +222,33 @@ msgstr "kopier"
 msgid "Trash non-primary"
 msgstr "Kast ikke-primære"
 
-#: src/js/components/DuplicateGroup.jsx:135
+#: src/js/components/DuplicateGroup.jsx:136
 msgid "Primary"
 msgstr "Primær"
 
 #. translators: %d: number of posts referencing this media
-#: src/js/components/DuplicateGroup.jsx:149
+#: src/js/components/DuplicateGroup.jsx:155
 #, js-format
 msgid "Used in %d post(s)"
 msgstr "Brukt i %d innlegg"
 
-#: src/js/components/DuplicateGroup.jsx:165
+#: src/js/components/DuplicateGroup.jsx:171
 msgid "Primary copy"
 msgstr "Primærkopi"
 
-#: src/js/components/DuplicateGroup.jsx:166
+#: src/js/components/DuplicateGroup.jsx:172
 msgid "Set as primary"
 msgstr "Sett som primær"
 
-#: src/js/components/MediaItemRow.jsx:78
+#: src/js/components/MediaItemRow.jsx:79
 msgid "Select item"
 msgstr "Velg element"
 
-#: src/js/components/MediaItemRow.jsx:116
+#: src/js/components/MediaItemRow.jsx:117
 msgid "Over by:"
 msgstr "Over med:"
 
-#: src/js/components/MediaItemRow.jsx:146
+#: src/js/components/MediaItemRow.jsx:152
 msgid "Flag for review"
 msgstr "Flagg for gjennomgang"
 
@@ -385,3 +375,12 @@ msgstr "Lagrer …"
 #: src/js/components/SettingsPanel.jsx:247
 msgid "Save Settings"
 msgstr "Lagre innstillinger"
+
+#: src/js/components/DuplicateGroup.jsx:141
+#: src/js/components/MediaItemRow.jsx:123
+msgid "Trashed"
+msgstr "Kastet"
+
+#: src/js/components/StatsCard.jsx:31
+msgid "Total Media"
+msgstr "Totalt medier"

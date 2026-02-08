@@ -101,13 +101,14 @@ export function DuplicateGroup( { group, onAction } ) {
 				{ group.members.map( ( member ) => {
 					const memberId = getId( member );
 					const isPrimary = memberId === primaryId;
+					const isTrashed = !! member.is_trashed;
 
 					return (
 						<div
 							key={ memberId }
 							className={ `vmfa-cleanup-dup-member ${
 								isPrimary ? 'is-primary' : ''
-							}` }
+							}${ isTrashed ? ' is-trashed' : '' }` }
 						>
 							<div className="vmfa-cleanup-dup-member__thumb">
 								{ member.thumbnail_url ? (
@@ -133,6 +134,11 @@ export function DuplicateGroup( { group, onAction } ) {
 									{ isPrimary && (
 										<span className="vmfa-cleanup-dup-member__badge">
 											{ __( 'Primary', 'vmfa-media-cleanup' ) }
+										</span>
+									) }
+									{ isTrashed && (
+										<span className="vmfa-cleanup-dup-member__badge vmfa-cleanup-dup-member__badge--trashed">
+											{ __( 'Trashed', 'vmfa-media-cleanup' ) }
 										</span>
 									) }
 								</div>

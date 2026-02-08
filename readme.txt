@@ -4,7 +4,7 @@ Tags: media, cleanup, unused, duplicates, virtual-media-folders
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.3
-Stable tag: 0.4.0
+Stable tag: 0.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,23 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 4. Settings panel with threshold configuration.
 
 == Changelog ==
+= 0.5.1 =
+* Fixed: Trash tab race condition — stale unused results overwrote correct empty trash response.
+* Fixed: Trashed items now show "Trashed" badge in Unused and Duplicates tabs.
+* Fixed: Trash tab only shows items trashed by this plugin (via `_vmfa_trashed` meta marker).
+* Fixed: Oversized detector ignored user-configured thresholds (wrong settings keys).
+* Fixed: REST API responses now include no-cache headers to prevent stale data.
+* Added: Race condition guard (`requestIdRef`) in useResults hook discards superseded responses.
+* Added: Asset versioning now includes file modification time for aggressive cache busting.
+= 0.5.0 =
+* Changed: Integrated as subtab within parent plugin's settings page
+* Changed: Dashboard tabs (Scan, Duplicates, etc.) now appear under Media Cleanup subtab
+* Fixed: Version constant mismatch (was 0.3.0, now matches header 0.5.0)
+
+= 0.4.0 =
+* Added: StatsCard component showing Total Media, Unused, Duplicates, and Oversized counts at dashboard top.
+* Changed: Tabs now appear above the stats card (consistent with AI Organizer).
+* Removed: Inline stats from dashboard header (replaced by StatsCard).
 
 = 0.3.0 =
 * Added: Settings tab — oversized thresholds, scan depth, batch size, auto-scan, archive folder name.
@@ -80,11 +97,6 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 * Fixed: Settings panel error when fetch fails.
 * Fixed: SelectControl uppercase label — replaced with native select elements.
 * Fixed: Settings UI spacing and section styling.
-
-= 0.4.0 =
-* Added: StatsCard component showing Total Media, Unused, Duplicates, and Oversized counts at dashboard top.
-* Changed: Tabs now appear above the stats card (consistent with AI Organizer).
-* Removed: Inline stats from dashboard header (replaced by StatsCard).
 
 = 0.2.0 =
 * Added: Reference count display on duplicate group members.

@@ -42,6 +42,14 @@ it( 'get_results returns paginated results', function () {
 			)
 		);
 
+	// Mock post existence filtering.
+	$mock_post            = new stdClass();
+	$mock_post->post_type = 'attachment';
+	Functions\when( 'clean_post_cache' )->justReturn();
+	Functions\when( 'get_post' )->justReturn( $mock_post );
+	Functions\when( 'get_post_field' )->justReturn( 'inherit' );
+	Functions\when( 'get_post_meta' )->justReturn( '' );
+
 	Functions\expect( 'rest_ensure_response' )
 		->andReturnUsing( function ( $data ) {
 			return new \WP_REST_Response( $data );
@@ -216,6 +224,8 @@ it( 'get_results returns trash items for trash type', function () {
 	Functions\expect( 'wp_filesize' )->andReturn( 1024 );
 	Functions\expect( 'wp_get_attachment_image_url' )->andReturn( '' );
 	Functions\expect( 'get_post_meta' )->with( 42, '_wp_trash_meta_time', true )->andReturn( '1704067200' );
+
+	Functions\when( 'wp_suspend_cache_addition' )->justReturn();
 
 	Functions\expect( 'rest_ensure_response' )
 		->andReturnUsing( function ( $data ) {
