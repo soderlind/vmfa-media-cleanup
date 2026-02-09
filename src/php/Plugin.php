@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use VmfaMediaCleanup\Detectors\UnusedDetector;
 use VmfaMediaCleanup\Detectors\DuplicateDetector;
+use VmfaMediaCleanup\Detectors\OversizedDetector;
 use VmfaMediaCleanup\REST\ScanController;
 use VmfaMediaCleanup\REST\ResultsController;
 use VmfaMediaCleanup\REST\ActionsController;
@@ -72,6 +73,13 @@ final class Plugin {
 	 * @var DuplicateDetector|null
 	 */
 	private ?DuplicateDetector $duplicate_detector = null;
+
+	/**
+	 * Oversized detector.
+	 *
+	 * @var OversizedDetector|null
+	 */
+	private ?OversizedDetector $oversized_detector = null;
 
 	/**
 	 * Private constructor to prevent direct instantiation.
@@ -160,11 +168,13 @@ final class Plugin {
 		$this->reference_index    = new ReferenceIndex();
 		$this->unused_detector    = new UnusedDetector( $this->reference_index );
 		$this->duplicate_detector = new DuplicateDetector( $this->hash_service );
+		$this->oversized_detector = new OversizedDetector();
 		$this->scan_service       = new ScanService(
 			$this->reference_index,
 			$this->hash_service,
 			$this->unused_detector,
-			$this->duplicate_detector
+			$this->duplicate_detector,
+			$this->oversized_detector
 		);
 	}
 
@@ -229,6 +239,7 @@ final class Plugin {
 				'scan'      => __( 'Scan', 'vmfa-media-cleanup' ),
 				'unused'    => __( 'Unused', 'vmfa-media-cleanup' ),
 				'duplicate' => __( 'Duplicates', 'vmfa-media-cleanup' ),
+				'oversized' => __( 'Oversized', 'vmfa-media-cleanup' ),
 				'flagged'   => __( 'Flagged', 'vmfa-media-cleanup' ),
 				'trash'     => __( 'Trash', 'vmfa-media-cleanup' ),
 				'settings'  => __( 'Settings', 'vmfa-media-cleanup' ),

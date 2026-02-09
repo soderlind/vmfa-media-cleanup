@@ -10,11 +10,11 @@ All endpoints use the `vmfa-cleanup/v1` namespace and require the `manage_option
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/scan` | Start a new scan. Optional body: `{ "types": ["unused","duplicate"] }` |
+| `POST` | `/scan` | Start a new scan. Optional body: `{ "types": ["unused","duplicate","oversized"] }` |
 | `GET` | `/scan/status` | Get scan progress (`status`, `phase`, `progress`, `total`) |
 | `POST` | `/scan/cancel` | Cancel a running scan |
 | `POST` | `/scan/reset` | Reset all scan results |
-| `GET` | `/stats` | Dashboard statistics (`unused_count`, `duplicate_count`) |
+| `GET` | `/stats` | Dashboard statistics (`unused_count`, `duplicate_count`, `oversized_count`) |
 
 ### Results
 
@@ -61,6 +61,7 @@ All endpoints use the `vmfa-cleanup/v1` namespace and require the `manage_option
 | Filter | Default | Description |
 |--------|---------|-------------|
 | `vmfa_cleanup_is_unused` | `true` | Override whether an attachment is unused. Return `false` to skip. |
+| `vmfa_cleanup_oversized_thresholds` | per-type MB values | Modify size thresholds. Array keyed by MIME prefix (`image`, `video`, `audio`, `document`). |
 | `vmfa_cleanup_archive_folder_name` | `"Archive"` | Change the archive virtual folder name |
 | `vmfa_cleanup_hash_algorithm` | `"sha256"` | Change the file hash algorithm |
 | `vmfa_cleanup_reference_meta_keys` | `[]` | Add custom meta keys to scan for attachment references |
@@ -84,6 +85,15 @@ add_filter( 'vmfa_cleanup_is_unused', function ( $is_unused, $attachment_id ) {
 }, 10, 2 );
 ```
 
+#### Lower the image threshold to 1 MB
+
+```php
+add_filter( 'vmfa_cleanup_oversized_thresholds', function ( $thresholds ) {
+    $thresholds['image'] = 1;
+    return $thresholds;
+} );
+```
+
 #### Run custom logic after a scan
 
 ```php
@@ -104,7 +114,7 @@ vmfa-media-cleanup/
 │   │   └── index.js        # Entry point
 │   ├── php/
 │   │   ├── CLI/            # WP-CLI command registration
-│   │   ├── Detectors/      # UnusedDetector, DuplicateDetector
+│   │   ├── Detectors/      # UnusedDetector, DuplicateDetector, OversizedDetector
 │   │   ├── REST/           # ScanController, ResultsController, ActionsController, SettingsController
 │   │   ├── Services/       # ScanService, ReferenceIndex, HashService
 │   │   ├── Update/         # GitHubPluginUpdater

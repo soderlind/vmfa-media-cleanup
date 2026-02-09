@@ -9,6 +9,27 @@ import { Button, Notice, Spinner } from '@wordpress/components';
 import { useSettings } from '../hooks/useSettings';
 
 /**
+ * Format bytes to a human-readable MB value for display.
+ *
+ * @param {number} bytes Byte value.
+ * @return {string}      Value in MB.
+ */
+function bytesToMB( bytes ) {
+	return String( Math.round( bytes / ( 1024 * 1024 ) ) );
+}
+
+/**
+ * Parse MB string input to bytes.
+ *
+ * @param {string} mb MB value string.
+ * @return {number}   Value in bytes.
+ */
+function mbToBytes( mb ) {
+	const num = parseInt( mb, 10 );
+	return isNaN( num ) || num < 0 ? 0 : num * 1024 * 1024;
+}
+
+/**
  * Settings panel component.
  *
  * @return {JSX.Element} Settings UI.
@@ -65,6 +86,77 @@ export function SettingsPanel() {
 						{ __( 'Settings saved.', 'vmfa-media-cleanup' ) }
 					</Notice>
 				) }
+
+				<div className="vmfa-cleanup-settings__section">
+					<h3 className="vmfa-cleanup-settings__heading">
+						{ __( 'Oversized Thresholds', 'vmfa-media-cleanup' ) }
+					</h3>
+					<p className="vmfa-cleanup-settings__description">
+						{ __( 'Files exceeding these sizes will be flagged as oversized.', 'vmfa-media-cleanup' ) }
+					</p>
+
+					<div className="vmfa-cleanup-settings__grid">
+						<div className="vmfa-cleanup-settings__field">
+							<label htmlFor="vmfa-threshold-image">
+								{ __( 'Images (MB)', 'vmfa-media-cleanup' ) }
+							</label>
+							<input
+								id="vmfa-threshold-image"
+								type="number"
+								min="1"
+								value={ bytesToMB( settings.oversized_threshold_image ) }
+								onChange={ ( e ) =>
+									updateField( 'oversized_threshold_image', mbToBytes( e.target.value ) )
+								}
+							/>
+						</div>
+
+						<div className="vmfa-cleanup-settings__field">
+							<label htmlFor="vmfa-threshold-video">
+								{ __( 'Videos (MB)', 'vmfa-media-cleanup' ) }
+							</label>
+							<input
+								id="vmfa-threshold-video"
+								type="number"
+								min="1"
+								value={ bytesToMB( settings.oversized_threshold_video ) }
+								onChange={ ( e ) =>
+									updateField( 'oversized_threshold_video', mbToBytes( e.target.value ) )
+								}
+							/>
+						</div>
+
+						<div className="vmfa-cleanup-settings__field">
+							<label htmlFor="vmfa-threshold-audio">
+								{ __( 'Audio (MB)', 'vmfa-media-cleanup' ) }
+							</label>
+							<input
+								id="vmfa-threshold-audio"
+								type="number"
+								min="1"
+								value={ bytesToMB( settings.oversized_threshold_audio ) }
+								onChange={ ( e ) =>
+									updateField( 'oversized_threshold_audio', mbToBytes( e.target.value ) )
+								}
+							/>
+						</div>
+
+						<div className="vmfa-cleanup-settings__field">
+							<label htmlFor="vmfa-threshold-document">
+								{ __( 'Documents (MB)', 'vmfa-media-cleanup' ) }
+							</label>
+							<input
+								id="vmfa-threshold-document"
+								type="number"
+								min="1"
+								value={ bytesToMB( settings.oversized_threshold_document ) }
+								onChange={ ( e ) =>
+									updateField( 'oversized_threshold_document', mbToBytes( e.target.value ) )
+								}
+							/>
+						</div>
+					</div>
+				</div>
 
 				<div className="vmfa-cleanup-settings__section">
 					<h3 className="vmfa-cleanup-settings__heading">

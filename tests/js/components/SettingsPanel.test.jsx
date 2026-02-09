@@ -9,6 +9,10 @@ import apiFetch from '@wordpress/api-fetch';
 import { SettingsPanel } from '../../../src/js/components/SettingsPanel.jsx';
 
 const defaultSettings = {
+	oversized_threshold_image: 2097152,
+	oversized_threshold_video: 104857600,
+	oversized_threshold_audio: 20971520,
+	oversized_threshold_document: 10485760,
 	archive_folder_name: 'Archive',
 	scan_batch_size: 100,
 	content_scan_depth: 'full',
@@ -35,13 +39,29 @@ describe( 'SettingsPanel', () => {
 		render( <SettingsPanel /> );
 
 		await waitFor( () => {
-			expect( screen.getByLabelText( 'Content scan depth' ) ).toBeInTheDocument();
+			expect( screen.getByLabelText( 'Images (MB)' ) ).toBeInTheDocument();
 		} );
 
+		expect( screen.getByLabelText( 'Videos (MB)' ) ).toBeInTheDocument();
+		expect( screen.getByLabelText( 'Audio (MB)' ) ).toBeInTheDocument();
+		expect( screen.getByLabelText( 'Documents (MB)' ) ).toBeInTheDocument();
+		expect( screen.getByLabelText( 'Content scan depth' ) ).toBeInTheDocument();
 		expect( screen.getByLabelText( 'Scan batch size' ) ).toBeInTheDocument();
 		expect( screen.getByLabelText( /Automatically scan new uploads/ ) ).toBeInTheDocument();
 		expect( screen.getByLabelText( 'Archive folder name' ) ).toBeInTheDocument();
 		expect( screen.getByText( 'Save Settings' ) ).toBeInTheDocument();
+	} );
+
+	it( 'displays threshold values in MB', async () => {
+		render( <SettingsPanel /> );
+
+		await waitFor( () => {
+			expect( screen.getByLabelText( 'Images (MB)' ) ).toHaveValue( 2 );
+		} );
+
+		expect( screen.getByLabelText( 'Videos (MB)' ) ).toHaveValue( 100 );
+		expect( screen.getByLabelText( 'Audio (MB)' ) ).toHaveValue( 20 );
+		expect( screen.getByLabelText( 'Documents (MB)' ) ).toHaveValue( 10 );
 	} );
 
 	it( 'displays scan settings values', async () => {
@@ -61,6 +81,20 @@ describe( 'SettingsPanel', () => {
 		await waitFor( () => {
 			expect( screen.getByLabelText( 'Archive folder name' ) ).toHaveValue( 'Archive' );
 		} );
+	} );
+
+	it( 'updates threshold field on change', async () => {
+		render( <SettingsPanel /> );
+
+		await waitFor( () => {
+			expect( screen.getByLabelText( 'Images (MB)' ) ).toBeInTheDocument();
+		} );
+
+		fireEvent.change( screen.getByLabelText( 'Images (MB)' ), {
+			target: { value: '5' },
+		} );
+
+		expect( screen.getByLabelText( 'Images (MB)' ) ).toHaveValue( 5 );
 	} );
 
 	it( 'updates content scan depth on change', async () => {

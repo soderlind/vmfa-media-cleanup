@@ -47,6 +47,14 @@ export function StatsCard( { stats } ) {
 							{ __( 'Duplicates', 'vmfa-media-cleanup' ) }
 						</span>
 					</div>
+					<div className="vmfa-stats-item">
+						<span className="vmfa-stats-value">
+							{ stats.oversized_count ?? 0 }
+						</span>
+						<span className="vmfa-stats-label">
+							{ __( 'Oversized', 'vmfa-media-cleanup' ) }
+						</span>
+					</div>
 				</div>
 			</CardBody>
 		</Card>

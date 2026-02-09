@@ -75,7 +75,6 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 
 = 1.1.0 =
 * Changed: Replaced inline plugin updater with shared `class-github-updater.php`
-* Removed: OversizedDetector (file size detection) feature and all related UI, REST, CLI, and test code
 
 = 1.0.0 =
 * Bump to stable 1.0.0 release.

@@ -112,6 +112,12 @@ export function MediaItemRow( {
 					{ item.dimensions && (
 						<span>{ item.dimensions }</span>
 					) }
+					{ type === 'oversized' && item.over_by > 0 && (
+						<span className="vmfa-cleanup-item__over">
+							{ __( 'Over by:', 'vmfa-media-cleanup' ) }{ ' ' }
+							{ formatSize( item.over_by ) }
+						</span>
+					) }
 					{ isTrashed && type !== 'trash' && (
 						<span className="vmfa-cleanup-item__badge vmfa-cleanup-item__badge--trashed">
 							{ __( 'Trashed', 'vmfa-media-cleanup' ) }

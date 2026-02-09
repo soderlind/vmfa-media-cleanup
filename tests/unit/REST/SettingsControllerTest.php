@@ -88,6 +88,7 @@ it( 'update_settings sanitizes and saves values', function () {
 	$request->shouldReceive( 'get_params' )->andReturn(
 		array(
 			'archive_folder_name'       => 'Custom Archive',
+			'oversized_threshold_image' => 5242880,
 			'auto_scan_on_upload'       => true,
 		)
 	);
@@ -123,6 +124,7 @@ it( 'update_settings sanitizes and saves values', function () {
 	$result = $this->controller->update_settings( $request );
 
 	expect( $result->data[ 'archive_folder_name' ] )->toBe( 'Custom Archive' );
+	expect( $result->data[ 'oversized_threshold_image' ] )->toBe( 5242880 );
 	expect( $result->data[ 'auto_scan_on_upload' ] )->toBeTrue();
 } );
 

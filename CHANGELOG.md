@@ -11,10 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replaced inline plugin updater with shared `class-github-updater.php`
 
-### Removed
-
-- Removed OversizedDetector (file size detection) feature and all related UI, REST, CLI, and test code
-
 ## [1.0.0] - 2026-02-09
 
 ### Changed

@@ -29,9 +29,9 @@ describe( 'useResults', () => {
 	it( 'accepts a custom initial type', () => {
 		apiFetch.mockReturnValue( new Promise( () => {} ) );
 
-		const { result } = renderHook( () => useResults( 'duplicate' ) );
+		const { result } = renderHook( () => useResults( 'oversized' ) );
 
-		expect( result.current.type ).toBe( 'duplicate' );
+		expect( result.current.type ).toBe( 'oversized' );
 	} );
 
 	it( 'fetches results on mount for non-duplicate type', async () => {
@@ -163,10 +163,10 @@ describe( 'useResults', () => {
 		const { result } = renderHook( () => useResults() );
 
 		act( () => {
-			result.current.setType( 'duplicate' );
+			result.current.setType( 'oversized' );
 		} );
 
-		expect( result.current.type ).toBe( 'duplicate' );
+		expect( result.current.type ).toBe( 'oversized' );
 	} );
 
 	it( 'setPage updates the page', async () => {

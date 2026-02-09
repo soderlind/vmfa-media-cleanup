@@ -28,11 +28,11 @@ export function CleanupDashboard() {
 	// Get active subtab from PHP (via localized script).
 	const activeTab = window.vmfaMediaCleanup?.activeSubtab || 'scan';
 
-	const resultTabs = [ 'unused', 'duplicate', 'flagged', 'trash' ];
+	const resultTabs = [ 'unused', 'duplicate', 'oversized', 'flagged', 'trash' ];
 
 	const results = useResults( resultTabs.includes( activeTab ) ? activeTab : 'unused' );
 
-	const scanDependentTabs = [ 'unused', 'duplicate', 'flagged' ];
+	const scanDependentTabs = [ 'unused', 'duplicate', 'oversized', 'flagged' ];
 	const isResultTab = resultTabs.includes( activeTab );
 	const needsScan =
 		scanDependentTabs.includes( activeTab ) && scan.status !== 'complete';

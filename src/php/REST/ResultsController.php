@@ -76,7 +76,7 @@ class ResultsController extends WP_REST_Controller {
 				'args'                => array(
 					'type'     => array(
 						'type'              => 'string',
-						'enum'              => array( 'unused', 'duplicate', 'flagged', 'trash' ),
+						'enum'              => array( 'unused', 'duplicate', 'oversized', 'flagged', 'trash' ),
 						'default'           => 'unused',
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -274,7 +274,7 @@ class ResultsController extends WP_REST_Controller {
 		$all_results = get_option( 'vmfa_cleanup_results', array() );
 		$status      = array();
 
-		foreach ( array( 'unused', 'duplicate' ) as $type ) {
+		foreach ( array( 'unused', 'duplicate', 'oversized' ) as $type ) {
 			if ( isset( $all_results[ $type ][ $attachment_id ] ) ) {
 				$status[] = $type;
 			}

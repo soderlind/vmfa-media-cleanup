@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 use VmfaMediaCleanup\Detectors\UnusedDetector;
 use VmfaMediaCleanup\Detectors\DuplicateDetector;
+use VmfaMediaCleanup\Detectors\OversizedDetector;
 use VmfaMediaCleanup\Plugin;
 
 /**
@@ -70,23 +71,33 @@ class ScanService {
 	private DuplicateDetector $duplicate_detector;
 
 	/**
+	 * Oversized detector.
+	 *
+	 * @var OversizedDetector
+	 */
+	private OversizedDetector $oversized_detector;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param ReferenceIndex    $reference_index    Reference index service.
 	 * @param HashService       $hash_service       Hash service.
 	 * @param UnusedDetector    $unused_detector    Unused detector.
 	 * @param DuplicateDetector $duplicate_detector Duplicate detector.
+	 * @param OversizedDetector $oversized_detector Oversized detector.
 	 */
 	public function __construct(
 		ReferenceIndex $reference_index,
 		HashService $hash_service,
 		UnusedDetector $unused_detector,
 		DuplicateDetector $duplicate_detector,
+		OversizedDetector $oversized_detector,
 	) {
 		$this->reference_index    = $reference_index;
 		$this->hash_service       = $hash_service;
 		$this->unused_detector    = $unused_detector;
 		$this->duplicate_detector = $duplicate_detector;
+		$this->oversized_detector = $oversized_detector;
 	}
 
 	/**
@@ -135,7 +146,7 @@ class ScanService {
 				'processed'    => 0,
 				'started_at'   => current_time( 'mysql', true ),
 				'completed_at' => null,
-				'types'        => empty( $types ) ? array( 'unused', 'duplicate' ) : $types,
+				'types'        => empty( $types ) ? array( 'unused', 'duplicate', 'oversized' ) : $types,
 			)
 		);
 
@@ -205,7 +216,7 @@ class ScanService {
 		$offset     = $args[ 'offset' ] ?? 0;
 		$batch_size = $args[ 'batch_size' ] ?? $this->get_batch_size();
 		$progress   = $this->get_progress();
-		$types      = $progress[ 'types' ] ?? array( 'unused', 'duplicate' );
+		$types      = $progress[ 'types' ] ?? array( 'unused', 'duplicate', 'oversized' );
 
 		// Only hash if duplicate detection is requested.
 		if ( ! in_array( 'duplicate', $types, true ) ) {
@@ -276,7 +287,7 @@ class ScanService {
 		}
 
 		$progress = $this->get_progress();
-		$types    = $progress[ 'types' ] ?? array( 'unused', 'duplicate' );
+		$types    = $progress[ 'types' ] ?? array( 'unused', 'duplicate', 'oversized' );
 		$results  = get_option( self::RESULTS_OPTION, array() );
 
 		// Run applicable detectors.
@@ -294,6 +305,14 @@ class ScanService {
 				$results[ 'duplicate' ] = array();
 			}
 			$results[ 'duplicate' ] = array_replace( $results[ 'duplicate' ], $duplicate_results );
+		}
+
+		if ( in_array( 'oversized', $types, true ) ) {
+			$oversized_results = $this->oversized_detector->detect( $attachment_ids );
+			if ( ! isset( $results[ 'oversized' ] ) ) {
+				$results[ 'oversized' ] = array();
+			}
+			$results[ 'oversized' ] = array_replace( $results[ 'oversized' ], $oversized_results );
 		}
 
 		update_option( self::RESULTS_OPTION, $results, false );
@@ -444,6 +463,7 @@ class ScanService {
 			'unused_count'     => count( $results[ 'unused' ] ?? array() ),
 			'duplicate_count'  => count( $results[ 'duplicate' ] ?? array() ),
 			'duplicate_groups' => $duplicate_groups,
+			'oversized_count'  => count( $results[ 'oversized' ] ?? array() ),
 			'flagged_count'    => $flagged_count,
 		);
 	}
