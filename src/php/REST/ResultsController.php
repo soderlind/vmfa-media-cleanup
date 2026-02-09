@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup\REST;
 
+defined( 'ABSPATH' ) || exit;
+
 use VmfaMediaCleanup\Detectors\DuplicateDetector;
 use VmfaMediaCleanup\Services\ReferenceIndex;
 use WP_REST_Controller;

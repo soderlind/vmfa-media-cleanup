@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup\Services;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Media reference index for tracking attachment usage.
  */

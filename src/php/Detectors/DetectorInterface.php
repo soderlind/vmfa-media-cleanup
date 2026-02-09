@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup\Detectors;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Contract for media detection strategies.
  */
