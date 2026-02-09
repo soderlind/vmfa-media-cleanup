@@ -184,14 +184,13 @@ describe( 'CleanupDashboard', () => {
 	it( 'displays stats when available', () => {
 		useScanStatus.mockReturnValue( {
 			...baseScan,
-			stats: { unused_count: 5, duplicate_count: 3, oversized_count: 1 },
+			stats: { unused_count: 5, duplicate_count: 3 },
 		} );
 
 		render( <CleanupDashboard /> );
 
 		expect( screen.getByText( '5' ) ).toBeInTheDocument();
 		expect( screen.getByText( '3' ) ).toBeInTheDocument();
-		expect( screen.getByText( '1' ) ).toBeInTheDocument();
 	} );
 
 	it( 'does not display stats section when stats is null', () => {

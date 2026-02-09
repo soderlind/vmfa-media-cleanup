@@ -14,7 +14,6 @@ use VmfaMediaCleanup\Services\ReferenceIndex;
 use VmfaMediaCleanup\Services\HashService;
 use VmfaMediaCleanup\Detectors\UnusedDetector;
 use VmfaMediaCleanup\Detectors\DuplicateDetector;
-use VmfaMediaCleanup\Detectors\OversizedDetector;
 use VmfaMediaCleanup\Plugin;
 
 beforeEach( function () {
@@ -22,14 +21,12 @@ beforeEach( function () {
 	$this->hash_service       = Mockery::mock( HashService::class);
 	$this->unused_detector    = Mockery::mock( UnusedDetector::class);
 	$this->duplicate_detector = Mockery::mock( DuplicateDetector::class);
-	$this->oversized_detector = Mockery::mock( OversizedDetector::class);
 
 	$this->service = new ScanService(
 		$this->reference_index,
 		$this->hash_service,
 		$this->unused_detector,
 		$this->duplicate_detector,
-		$this->oversized_detector,
 	);
 } );
 
@@ -184,9 +181,6 @@ it( 'get_stats computes statistics from results', function () {
 			45 => array( 'type' => 'duplicate', 'hash' => 'aaa' ),
 			46 => array( 'type' => 'duplicate', 'hash' => 'bbb' ),
 		),
-		'oversized' => array(
-			47 => array( 'type' => 'oversized' ),
-		),
 	);
 
 	Functions\expect( 'get_option' )
@@ -212,7 +206,6 @@ it( 'get_stats computes statistics from results', function () {
 	expect( $stats[ 'unused_count' ] )->toBe( 2 );
 	expect( $stats[ 'duplicate_count' ] )->toBe( 3 );
 	expect( $stats[ 'duplicate_groups' ] )->toBe( 2 );
-	expect( $stats[ 'oversized_count' ] )->toBe( 1 );
 	expect( $stats[ 'flagged_count' ] )->toBe( 5 );
 
 	unset( $GLOBALS[ 'wpdb' ] );
@@ -226,7 +219,7 @@ it( 'handle_finalize_scan marks scan as complete', function () {
 		'processed'    => 100,
 		'started_at'   => '2024-01-01 00:00:00',
 		'completed_at' => null,
-		'types'        => array( 'unused', 'duplicate', 'oversized' ),
+		'types'        => array( 'unused', 'duplicate' ),
 	);
 
 	Functions\expect( 'get_option' )

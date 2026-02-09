@@ -154,7 +154,6 @@ it( 'get_stats returns statistics', function () {
 		'unused_count'     => 10,
 		'duplicate_count'  => 5,
 		'duplicate_groups' => 2,
-		'oversized_count'  => 3,
 		'flagged_count'    => 1,
 	);
 

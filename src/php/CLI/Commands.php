@@ -53,7 +53,7 @@ class Commands {
 	/**
 	 * Run a media library scan.
 	 *
-	 * Scans the entire media library for unused, duplicate, and oversized items.
+	 * Scans the entire media library for unused and duplicate items.
 	 *
 	 * ## OPTIONS
 	 *
@@ -125,7 +125,6 @@ class Commands {
 		$results = array(
 			'unused'    => array(),
 			'duplicate' => array(),
-			'oversized' => array(),
 		);
 
 		foreach ( $this->plugin->detectors() as $detector ) {
@@ -150,7 +149,7 @@ class Commands {
 	 * ## OPTIONS
 	 *
 	 * [--type=<type>]
-	 * : Filter by issue type: unused, duplicate, oversized, flagged. Default: all.
+	 * : Filter by issue type: unused, duplicate, flagged. Default: all.
 	 *
 	 * [--format=<format>]
 	 * : Output format. Accepts: table, csv, json, yaml, count. Default: table.
@@ -162,7 +161,7 @@ class Commands {
 	 *
 	 *     wp vmfa-cleanup list
 	 *     wp vmfa-cleanup list --type=unused --format=csv
-	 *     wp vmfa-cleanup list --type=oversized --format=json
+	 *     wp vmfa-cleanup list --type=flagged --format=json
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Named arguments.
@@ -201,7 +200,7 @@ class Commands {
 		}
 
 		$types_to_show = 'all' === $type
-			? array( 'unused', 'duplicate', 'oversized' )
+			? array( 'unused', 'duplicate' )
 			: array( $type );
 
 		foreach ( $types_to_show as $t ) {
@@ -275,10 +274,6 @@ class Commands {
 				'value'  => count( $results[ 'duplicate' ] ?? array() ),
 			),
 			array(
-				'metric' => 'Oversized',
-				'value'  => count( $results[ 'oversized' ] ?? array() ),
-			),
-			array(
 				'metric' => 'Last scan',
 				'value'  => $progress[ 'completed_at' ] ?? 'never',
 			),
@@ -293,7 +288,7 @@ class Commands {
 	 * ## OPTIONS
 	 *
 	 * [--type=<type>]
-	 * : Issue type to archive: unused, duplicate, oversized. Required.
+	 * : Issue type to archive: unused, duplicate. Required.
 	 *
 	 * [--ids=<ids>]
 	 * : Comma-separated list of specific attachment IDs.
@@ -350,7 +345,7 @@ class Commands {
 	 * ## OPTIONS
 	 *
 	 * [--type=<type>]
-	 * : Issue type to trash: unused, duplicate, oversized. Required.
+	 * : Issue type to trash: unused, duplicate. Required.
 	 *
 	 * [--ids=<ids>]
 	 * : Comma-separated list of specific attachment IDs.
@@ -632,7 +627,6 @@ class Commands {
 		return match ( $type ) {
 			'unused'    => 'No references found',
 			'duplicate' => sprintf( 'Hash: %s', substr( $item[ 'hash' ] ?? 'unknown', 0, 12 ) ),
-			'oversized' => sprintf( 'Size: %s (over by %s)', size_format( $item[ 'file_size' ] ?? 0 ), size_format( $item[ 'over_by' ] ?? 0 ) ),
 			default     => '',
 		};
 	}

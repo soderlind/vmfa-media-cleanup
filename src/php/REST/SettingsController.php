@@ -42,10 +42,6 @@ class SettingsController extends WP_REST_Controller {
 	 * @var array
 	 */
 	private const DEFAULTS = array(
-		'oversized_threshold_image'    => 2097152,    // 2 MB.
-		'oversized_threshold_video'    => 104857600,  // 100 MB.
-		'oversized_threshold_audio'    => 20971520,   // 20 MB.
-		'oversized_threshold_document' => 10485760,   // 10 MB.
 		'archive_folder_name'          => 'Archive',
 		'scan_batch_size'              => 100,
 		'content_scan_depth'           => 'full',
@@ -138,10 +134,6 @@ class SettingsController extends WP_REST_Controller {
 			}
 
 			$updated[ $key ] = match ( $key ) {
-				'oversized_threshold_image',
-				'oversized_threshold_video',
-				'oversized_threshold_audio',
-				'oversized_threshold_document',
 				'scan_batch_size'          => absint( $params[ $key ] ),
 
 				'archive_folder_name'      => sanitize_text_field( $params[ $key ] ),
@@ -178,22 +170,6 @@ class SettingsController extends WP_REST_Controller {
 	 */
 	private function get_settings_args(): array {
 		return array(
-			'oversized_threshold_image'    => array(
-				'type'              => 'integer',
-				'sanitize_callback' => 'absint',
-			),
-			'oversized_threshold_video'    => array(
-				'type'              => 'integer',
-				'sanitize_callback' => 'absint',
-			),
-			'oversized_threshold_audio'    => array(
-				'type'              => 'integer',
-				'sanitize_callback' => 'absint',
-			),
-			'oversized_threshold_document' => array(
-				'type'              => 'integer',
-				'sanitize_callback' => 'absint',
-			),
 			'archive_folder_name'          => array(
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',

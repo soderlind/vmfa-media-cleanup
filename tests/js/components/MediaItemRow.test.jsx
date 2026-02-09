@@ -62,23 +62,6 @@ describe( 'MediaItemRow', () => {
 		expect( screen.getByText( '1.0 MB' ) ).toBeInTheDocument();
 	} );
 
-	it( 'shows "Over by" for oversized items', () => {
-		render(
-			<MediaItemRow
-				item={ { ...baseItem, over_by: 524288 } }
-				type="oversized"
-				isSelected={ false }
-				onToggle={ vi.fn() }
-				onAction={ vi.fn() }
-			/>
-		);
-
-		const overEl = document.querySelector( '.vmfa-cleanup-item__over' );
-		expect( overEl ).toBeInTheDocument();
-		expect( overEl.textContent ).toContain( 'Over by:' );
-		expect( overEl.textContent ).toContain( '512.0 KB' );
-	} );
-
 	it( 'has a checkbox that reflects isSelected', () => {
 		const { rerender } = render(
 			<MediaItemRow

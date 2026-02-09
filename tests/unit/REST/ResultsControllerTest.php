@@ -66,7 +66,7 @@ it( 'get_results returns paginated results', function () {
 
 it( 'get_results returns empty for unknown type', function () {
 	$request = Mockery::mock( 'WP_REST_Request' );
-	$request->shouldReceive( 'get_param' )->with( 'type' )->andReturn( 'oversized' );
+	$request->shouldReceive( 'get_param' )->with( 'type' )->andReturn( 'flagged' );
 	$request->shouldReceive( 'get_param' )->with( 'page' )->andReturn( 1 );
 	$request->shouldReceive( 'get_param' )->with( 'per_page' )->andReturn( 20 );
 	$request->shouldReceive( 'get_param' )->with( 'orderby' )->andReturn( 'file_size' );

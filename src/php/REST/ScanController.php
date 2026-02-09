@@ -65,7 +65,7 @@ class ScanController extends WP_REST_Controller {
 						'type'    => 'array',
 						'items'   => array(
 							'type' => 'string',
-							'enum' => array( 'unused', 'duplicate', 'oversized' ),
+							'enum' => array( 'unused', 'duplicate' ),
 						),
 						'default' => array(),
 					),

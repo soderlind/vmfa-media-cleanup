@@ -8,10 +8,6 @@ import apiFetch from '@wordpress/api-fetch';
 import { useSettings } from '../../../src/js/hooks/useSettings.js';
 
 const defaultSettings = {
-	oversized_threshold_image: 2097152,
-	oversized_threshold_video: 104857600,
-	oversized_threshold_audio: 20971520,
-	oversized_threshold_document: 10485760,
 	archive_folder_name: 'Archive',
 	scan_batch_size: 100,
 	content_scan_depth: 'full',
