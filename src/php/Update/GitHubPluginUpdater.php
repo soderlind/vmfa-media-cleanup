@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup\Update;
 
+defined( 'ABSPATH' ) || exit;
+
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 /**

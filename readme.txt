@@ -72,14 +72,12 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 4. Settings panel with threshold configuration.
 
 == Changelog ==
+
 = 0.5.1 =
-* Fixed: Trash tab race condition — stale unused results overwrote correct empty trash response.
-* Fixed: Trashed items now show "Trashed" badge in Unused and Duplicates tabs.
-* Fixed: Trash tab only shows items trashed by this plugin (via `_vmfa_trashed` meta marker).
-* Fixed: Oversized detector ignored user-configured thresholds (wrong settings keys).
-* Fixed: REST API responses now include no-cache headers to prevent stale data.
-* Added: Race condition guard (`requestIdRef`) in useResults hook discards superseded responses.
-* Added: Asset versioning now includes file modification time for aggressive cache busting.
+* Fixed: Removed stray character from main plugin file.
+* Fixed: Added `defined( 'ABSPATH' ) || exit` guards to all PHP source files.
+* Added: `uninstall.php` for clean plugin removal (drops custom tables and deletes options).
+
 = 0.5.0 =
 * Changed: Integrated as subtab within parent plugin's settings page
 * Changed: Dashboard tabs (Scan, Duplicates, etc.) now appear under Media Cleanup subtab

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup;
 
+defined( 'ABSPATH' ) || exit;
+
 use VmfaMediaCleanup\Detectors\UnusedDetector;
 use VmfaMediaCleanup\Detectors\DuplicateDetector;
 use VmfaMediaCleanup\Detectors\OversizedDetector;

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup\Detectors;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Detects oversized media files above configurable thresholds.
  */

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup\Detectors;
 
+defined( 'ABSPATH' ) || exit;
+
 use VmfaMediaCleanup\Services\ReferenceIndex;
 
 /**

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup\Services;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * File hash computation and caching service.
  */

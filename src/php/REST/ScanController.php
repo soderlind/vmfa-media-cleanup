@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup\REST;
 
+defined( 'ABSPATH' ) || exit;
+
 use VmfaMediaCleanup\Services\ScanService;
 use WP_REST_Controller;
 use WP_REST_Server;

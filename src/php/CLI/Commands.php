@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace VmfaMediaCleanup\CLI;
 
+defined( 'ABSPATH' ) || exit;
+
 use VmfaMediaCleanup\Plugin;
 use WP_CLI;
 use WP_CLI\Utils;
