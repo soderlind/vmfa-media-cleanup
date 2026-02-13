@@ -19,9 +19,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build plugin # Remove or modify this step as needed
-        run: |
-          composer install --no-dev
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Build JS/CSS assets
+        run: npm ci && npm run build
+
+      - name: Install PHP dependencies
+        run: composer install --no-dev --optimize-autoloader
 
       - name: Archive Release
         uses: thedoctor0/zip-release@b57d897cb5d60cb78b51a507f63fa184cfe35554 #0.7.6
@@ -43,6 +51,14 @@ jobs:
           unzip -l vmfa-media-cleanup.zip || { echo "Failed to list zip contents"; exit 1; }
           echo "Total files: $(unzip -l vmfa-media-cleanup.zip | awk 'END{print $2}')"
           
+          # Verify build assets are included
+          if unzip -l vmfa-media-cleanup.zip | grep -q "build/index.js"; then
+            echo "✓ Build assets are included"
+          else
+            echo "✗ ERROR: build/index.js is missing from the release!"
+            exit 1
+          fi
+
           # Verify Action Scheduler is included (required dependency)
           if unzip -l vmfa-media-cleanup.zip | grep -q "vendor/woocommerce/action-scheduler/action-scheduler.php"; then
             echo "✓ Action Scheduler is included (vendor/)"
