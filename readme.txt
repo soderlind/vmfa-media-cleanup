@@ -4,7 +4,7 @@ Tags: media, cleanup, unused, duplicates, virtual-media-folders
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.3
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,10 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 4. Settings panel with threshold configuration.
 
 == Changelog ==
+
+= 1.1.1 =
+* Fixed: Added Node.js build step to GitHub Actions release workflows (zip was missing JS/CSS assets)
+* Fixed: Added build/index.js verification check to release workflows
 
 = 1.1.0 =
 * Changed: Replaced inline plugin updater with shared `class-github-updater.php`
