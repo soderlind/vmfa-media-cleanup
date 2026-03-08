@@ -4,7 +4,7 @@ Tags: media, cleanup, unused, duplicates, virtual-media-folders
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,9 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 4. Settings panel with threshold configuration.
 
 == Changelog ==
+
+= 1.1.3 =
+* Security: Updated npm dependencies.
 
 = 1.1.2 =
 * Changed: Tested up to WordPress 7.0
