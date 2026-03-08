@@ -370,6 +370,21 @@ final class Plugin {
 			$css_version
 		);
 
+		// WP 7+ design-token overrides.
+		if ( function_exists( 'vmfo_is_wp7' ) && vmfo_is_wp7() ) {
+			$wp7_asset_file = VMFA_MEDIA_CLEANUP_PATH . 'build/wp7-compat.asset.php';
+			$wp7_version    = file_exists( $wp7_asset_file )
+				? ( include $wp7_asset_file )['version'] ?? VMFA_MEDIA_CLEANUP_VERSION
+				: VMFA_MEDIA_CLEANUP_VERSION;
+
+			wp_enqueue_style(
+				'vmfa-media-cleanup-wp7',
+				VMFA_MEDIA_CLEANUP_URL . 'build/wp7-compat.css',
+				[ 'vmfa-media-cleanup-admin', 'wp-base-styles' ],
+				$wp7_version
+			);
+		}
+
 		wp_localize_script(
 			'vmfa-media-cleanup-admin',
 			'vmfaMediaCleanup',
