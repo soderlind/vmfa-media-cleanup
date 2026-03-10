@@ -1,0 +1,120 @@
+/**
+ * WP 7.0+ admin compatibility overrides for Media Cleanup.
+ *
+ * Loaded only on WordPress 7.0+ to align with the "Modern" default color
+ * scheme and the new design tokens.
+ *
+ * @since 1.2.0
+ * @package VmfaMediaCleanup
+ */
+
+/* ==========================================================================
+   Theme color: use CSS custom properties from wp-base-styles
+   ========================================================================== */
+
+/* Scan progress bar */
+.vmfa-cleanup-scan__bar {
+	background: var(--wp-admin-theme-color);
+}
+
+/* Bulk action bar */
+.vmfa-cleanup-bulk-bar {
+	border-color: var(--wp-admin-theme-color);
+}
+
+/* Item title link */
+.vmfa-cleanup-item__title a {
+	color: var(--wp-admin-theme-color);
+}
+
+.vmfa-cleanup-item__title a:hover {
+	color: var(--wp-admin-theme-color-darker-20);
+}
+
+/* Duplicate member title link */
+.vmfa-cleanup-dup-member__title a {
+	color: var(--wp-admin-theme-color);
+}
+
+.vmfa-cleanup-dup-member__title a:hover {
+	color: var(--wp-admin-theme-color-darker-20);
+}
+
+/* Stats highlight value */
+.vmfa-stats-value--highlight {
+	color: var(--wp-admin-theme-color);
+}
+
+/* Settings field focus */
+.vmfa-cleanup-settings__field input:focus,
+.vmfa-cleanup-settings__field select:focus {
+	border-color: var(--wp-admin-theme-color);
+	box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
+}
+
+/* Selected item highlight */
+.vmfa-cleanup-item.is-selected {
+	background: rgba(var(--wp-admin-theme-color--rgb), 0.08);
+}
+
+/* ==========================================================================
+   Design-token alignment: backgrounds & borders
+   ========================================================================== */
+
+/* Light background: #f6f7f7 → #f0f0f0 */
+.vmfa-cleanup-scan__bar-wrapper {
+	background: #f0f0f0;
+}
+
+.vmfa-cleanup-results__list-header {
+	background: #f0f0f0;
+}
+
+.vmfa-cleanup-item:hover {
+	background: #f0f0f0;
+}
+
+.vmfa-cleanup-dup-group__header {
+	background: #f0f0f0;
+}
+
+.vmfa-cleanup-dup-member__thumb {
+	background: #f0f0f0;
+}
+
+.vmfa-cleanup-item__thumbnail {
+	background: #f0f0f0;
+}
+
+/* Border color: #c3c4c7 / #e0e0e0 → #ddd */
+.vmfa-cleanup-results__list-header {
+	border-color: #ddd;
+}
+
+.vmfa-cleanup-item {
+	border-color: #ddd;
+}
+
+.vmfa-cleanup-dup-group {
+	border-color: #ddd;
+}
+
+.vmfa-cleanup-dup-group__header {
+	border-bottom-color: #ddd;
+}
+
+.vmfa-cleanup-dup-member {
+	border-bottom-color: #ddd;
+}
+
+.vmfa-cleanup-settings__section {
+	border-bottom-color: #ddd;
+}
+
+.vmfa-cleanup-dashboard__tabs {
+	border-bottom-color: #ddd;
+}
+
+.vmfa-cleanup-dashboard__content {
+	border-color: #ddd;
+}
