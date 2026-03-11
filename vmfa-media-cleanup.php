@@ -58,15 +58,15 @@ if ( ! function_exists( 'as_schedule_single_action' ) ) {
  */
 function init(): void {
 	// Update checker via GitHub releases.
-	if ( ! class_exists( \Soderlind\WordPress\GitHubUpdater::class ) ) {
+	if ( ! class_exists( \Soderlind\WordPress\GitHubUpdater::class) ) {
 		require_once __DIR__ . '/class-github-updater.php';
 	}
 	\Soderlind\WordPress\GitHubUpdater::init(
-		github_url:  'https://github.com/soderlind/vmfa-media-cleanup',
+		github_url: 'https://github.com/soderlind/vmfa-media-cleanup',
 		plugin_file: VMFA_MEDIA_CLEANUP_FILE,
 		plugin_slug: 'vmfa-media-cleanup',
-		name_regex:  '/vmfa-media-cleanup\.zip/',
-		branch:      'main',
+		name_regex: '/vmfa-media-cleanup\.zip/',
+		branch: 'main',
 	);
 
 	// Boot the plugin.
