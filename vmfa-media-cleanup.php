@@ -36,20 +36,9 @@ if ( file_exists( VMFA_MEDIA_CLEANUP_PATH . 'vendor/autoload.php' ) ) {
 }
 
 // Initialize Action Scheduler early (must be loaded before plugins_loaded).
-// Action Scheduler uses its own version management, so it's safe to load even if another plugin bundles it.
-if ( ! function_exists( 'as_schedule_single_action' ) ) {
-	$action_scheduler_paths = array(
-		VMFA_MEDIA_CLEANUP_PATH . 'vendor/woocommerce/action-scheduler/action-scheduler.php',
-		VMFA_MEDIA_CLEANUP_PATH . 'woocommerce/action-scheduler/action-scheduler.php',
-	);
+use VirtualMediaFolders\Addon\ActionSchedulerLoader;
 
-	foreach ( $action_scheduler_paths as $action_scheduler_path ) {
-		if ( file_exists( $action_scheduler_path ) ) {
-			require_once $action_scheduler_path;
-			break;
-		}
-	}
-}
+ActionSchedulerLoader::maybe_load( VMFA_MEDIA_CLEANUP_PATH );
 
 /**
  * Initialize the plugin.
