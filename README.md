@@ -23,6 +23,9 @@ Add-on for [Virtual Media Folders](https://wordpress.org/plugins/virtual-media-f
 
 ## Installation
 
+Recommended: Use the [Add-On Manager](https://github.com/soderlind/vmfa) to install the add-on.
+
+Manual installation:
 
 1. Download [`vmfa-media-cleanup.zip`](https://github.com/soderlind/vmfa-media-cleanup/releases/latest/download/vmfa-media-cleanup.zip)
 2. Upload via `Plugins → Add New → Upload Plugin`
