@@ -4,7 +4,7 @@ Tags: media, cleanup, unused, duplicates, virtual-media-folders
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,11 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 4. Settings panel with threshold configuration.
 
 == Changelog ==
+
+= 1.3.1 =
+* Fixed: Action Scheduler now bundles into `vendor/woocommerce/action-scheduler/` instead of being relocated by `composer/installers`, restoring the release build and runtime loader.
+* Security: Resolved the majority of Dependabot alerts by updating build/test dependencies (`@wordpress/scripts` 31 → 32, `@wordpress/components` → 36). Remaining alerts are dev-only transitive dependencies.
+* Changed: Added grouped `.github/dependabot.yml` config to consolidate future dependency update PRs.
 
 = 1.3.0 =
 * Changed: Refactored Plugin class to extend VMF core `AbstractPlugin` base class
