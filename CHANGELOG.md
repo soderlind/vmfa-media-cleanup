@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.1] - 2026-07-12
 
+### Fixed
+
+- Action Scheduler now installs into `vendor/woocommerce/action-scheduler/` (via `extra.installer-paths`) instead of being relocated to `wp-content/plugins/action-scheduler/` by `composer/installers`, restoring the release build's bundling check and the runtime `ActionSchedulerLoader` path resolution.
+
 ### Security
 
 - Resolved the majority of Dependabot alerts by updating build/test dependencies (`npm audit fix`, `@wordpress/scripts` 31 → 32, `@wordpress/components` → 36). Remaining alerts are dev-only transitive dependencies pinned by `@wordpress/scripts`.

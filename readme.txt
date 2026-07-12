@@ -74,6 +74,7 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 == Changelog ==
 
 = 1.3.1 =
+* Fixed: Action Scheduler now bundles into `vendor/woocommerce/action-scheduler/` instead of being relocated by `composer/installers`, restoring the release build and runtime loader.
 * Security: Resolved the majority of Dependabot alerts by updating build/test dependencies (`@wordpress/scripts` 31 → 32, `@wordpress/components` → 36). Remaining alerts are dev-only transitive dependencies.
 * Changed: Added grouped `.github/dependabot.yml` config to consolidate future dependency update PRs.
 
