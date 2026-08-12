@@ -2,9 +2,9 @@
 Contributors: PerS
 Tags: media, cleanup, unused, duplicates, virtual-media-folders
 Requires at least: 6.8
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,10 @@ Yes. Scanning runs in the background via Action Scheduler with configurable batc
 4. Settings panel with threshold configuration.
 
 == Changelog ==
+
+= 1.3.2 =
+* Fixed: Prevent a fatal error when the "Virtual Media Folders" parent plugin is missing or older than 2.0.0; show an admin notice instead.
+* Changed: Tested up to WordPress 7.1.
 
 = 1.3.1 =
 * Fixed: Action Scheduler now bundles into `vendor/woocommerce/action-scheduler/` instead of being relocated by `composer/installers`, restoring the release build and runtime loader.
