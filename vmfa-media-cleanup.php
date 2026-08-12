@@ -3,7 +3,7 @@
  * Plugin Name:       Virtual Media Folders - Media Cleanup
  * Plugin URI:        https://github.com/soderlind/vmfa-media-cleanup
  * Description:       Media maintenance add-on for Virtual Media Folders. Detect unused, duplicate, and oversized media — then archive, trash, or flag for review.
- * Version:           1.3.1
+ * Version:           1.3.2
  * Requires at least: 6.8
  * Requires PHP:      8.3
  * Requires Plugins:  virtual-media-folders
@@ -24,7 +24,7 @@ namespace VmfaMediaCleanup;
 defined( 'ABSPATH' ) || exit;
 
 // Plugin constants.
-define( 'VMFA_MEDIA_CLEANUP_VERSION', '1.3.1' );
+define( 'VMFA_MEDIA_CLEANUP_VERSION', '1.3.2' );
 define( 'VMFA_MEDIA_CLEANUP_FILE', __FILE__ );
 define( 'VMFA_MEDIA_CLEANUP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VMFA_MEDIA_CLEANUP_URL', plugin_dir_url( __FILE__ ) );
@@ -38,7 +38,9 @@ if ( file_exists( VMFA_MEDIA_CLEANUP_PATH . 'vendor/autoload.php' ) ) {
 // Initialize Action Scheduler early (must be loaded before plugins_loaded).
 use VirtualMediaFolders\Addon\ActionSchedulerLoader;
 
-ActionSchedulerLoader::maybe_load( VMFA_MEDIA_CLEANUP_PATH );
+if ( class_exists( ActionSchedulerLoader::class ) ) {
+	ActionSchedulerLoader::maybe_load( VMFA_MEDIA_CLEANUP_PATH );
+}
 
 /**
  * Initialize the plugin.
@@ -46,6 +48,12 @@ ActionSchedulerLoader::maybe_load( VMFA_MEDIA_CLEANUP_PATH );
  * @return void
  */
 function init(): void {
+	// The parent plugin (Virtual Media Folders 2.0.0+) provides the add-on base class.
+	if ( ! class_exists( \VirtualMediaFolders\Addon\AbstractPlugin::class ) ) {
+		add_action( 'admin_notices', __NAMESPACE__ . '\\missing_parent_notice' );
+		return;
+	}
+
 	// Update checker via GitHub releases.
 	if ( ! class_exists( \Soderlind\WordPress\GitHubUpdater::class) ) {
 		require_once __DIR__ . '/class-github-updater.php';
@@ -63,6 +71,24 @@ function init(): void {
 }
 
 add_action( 'plugins_loaded', __NAMESPACE__ . '\\init', 20 );
+
+/**
+ * Admin notice shown when the required parent plugin is missing or outdated.
+ *
+ * @return void
+ */
+function missing_parent_notice(): void {
+	if ( ! current_user_can( 'activate_plugins' ) ) {
+		return;
+	}
+	printf(
+		'<div class="notice notice-error"><p>%s</p></div>',
+		esc_html__(
+			'Virtual Media Folders - Media Cleanup requires the "Virtual Media Folders" plugin (version 2.0.0 or later) to be installed and active.',
+			'vmfa-media-cleanup'
+		)
+	);
+}
 
 /**
  * Activation hook.
