@@ -8,18 +8,28 @@
 // Variables
 // ──────────────────────────────────────────
 
-$vmfa-primary: #2271b1;
-$vmfa-primary-hover: #135e96;
-$vmfa-success: #00a32a;
-$vmfa-warning: #dba617;
-$vmfa-danger: #d63638;
-$vmfa-border: #c3c4c7;
-$vmfa-border-light: #e0e0e0;
-$vmfa-bg-light: #f6f7f7;
-$vmfa-bg-white: #fff;
-$vmfa-text: #1e1e1e;
-$vmfa-text-muted: #757575;
-$vmfa-radius: 4px;
+// Colors use WordPress Design System tokens. VMF (2.2.0+) provides classic
+// WP 6.x values on older WordPress; the build adds WP 7 fallbacks for when
+// neither core nor VMF defines a token (postcss.config.js).
+$vmfa-primary: var(--wp-admin-theme-color, #2271b1);
+$vmfa-primary-hover: var(--wp-admin-theme-color-darker-20, #135e96);
+$vmfa-primary-tint: rgba(var(--wp-admin-theme-color--rgb, 34, 113, 177), 0.08);
+$vmfa-success: var(--wpds-color-foreground-content-success-weak);
+$vmfa-success-bg: var(--wpds-color-background-surface-success-weak);
+$vmfa-warning: var(--wpds-color-foreground-content-warning-weak);
+$vmfa-danger: var(--wpds-color-foreground-content-error-weak);
+$vmfa-danger-bg: var(--wpds-color-background-surface-error-weak);
+$vmfa-danger-stroke: var(--wpds-color-stroke-surface-error-strong);
+$vmfa-border: var(--wpds-color-stroke-surface-neutral);
+$vmfa-border-input: var(--wpds-color-stroke-interactive-neutral);
+$vmfa-border-light: var(--wpds-color-stroke-surface-neutral);
+$vmfa-bg-light: var(--wpds-color-background-surface-neutral-weak);
+$vmfa-bg-white: var(--wpds-color-background-surface-neutral-strong);
+$vmfa-text: var(--wpds-color-foreground-content-neutral);
+$vmfa-text-muted: var(--wpds-color-foreground-content-neutral-weak);
+$vmfa-text-on-color: var(--wpds-color-foreground-interactive-brand-strong);
+$vmfa-radius: var(--wpds-border-radius-md);
+$vmfa-radius-sm: var(--wpds-border-radius-sm);
 $vmfa-thumb-size: 48px;
 
 // ──────────────────────────────────────────
@@ -201,8 +211,8 @@ $vmfa-thumb-size: 48px;
 
 	&__error {
 		padding: 12px;
-		background: #fcf0f1;
-		border-left: 4px solid $vmfa-danger;
+		background: $vmfa-danger-bg;
+		border-left: 4px solid $vmfa-danger-stroke;
 		color: $vmfa-danger;
 	}
 
@@ -267,7 +277,7 @@ $vmfa-thumb-size: 48px;
 	}
 
 	&.is-selected {
-		background: #e7f3ff;
+		background: $vmfa-primary-tint;
 	}
 
 	&__checkbox {
@@ -278,7 +288,7 @@ $vmfa-thumb-size: 48px;
 		flex-shrink: 0;
 		width: $vmfa-thumb-size;
 		height: $vmfa-thumb-size;
-		border-radius: 3px;
+		border-radius: $vmfa-radius-sm;
 		overflow: hidden;
 		background: $vmfa-bg-light;
 
@@ -292,8 +302,8 @@ $vmfa-thumb-size: 48px;
 	&__placeholder {
 		width: $vmfa-thumb-size;
 		height: $vmfa-thumb-size;
-		background: $vmfa-border-light;
-		border-radius: 3px;
+		background: $vmfa-bg-light;
+		border-radius: $vmfa-radius-sm;
 	}
 
 	&__info {
@@ -331,14 +341,14 @@ $vmfa-thumb-size: 48px;
 
 	&__badge {
 		padding: 2px 6px;
-		border-radius: 3px;
+		border-radius: $vmfa-radius-sm;
 		font-size: 11px;
 		font-weight: 500;
 		text-transform: uppercase;
 		letter-spacing: 0.3px;
 
 		&--trashed {
-			background: rgba($vmfa-danger, 0.1);
+			background: $vmfa-danger-bg;
 			color: $vmfa-danger;
 		}
 	}
@@ -406,7 +416,7 @@ $vmfa-thumb-size: 48px;
 	}
 
 	&.is-primary {
-		background: #f0f7e6;
+		background: $vmfa-success-bg;
 	}
 
 	&.is-trashed {
@@ -421,7 +431,7 @@ $vmfa-thumb-size: 48px;
 		flex-shrink: 0;
 		width: $vmfa-thumb-size;
 		height: $vmfa-thumb-size;
-		border-radius: 3px;
+		border-radius: $vmfa-radius-sm;
 		overflow: hidden;
 		background: $vmfa-bg-light;
 
@@ -458,12 +468,12 @@ $vmfa-thumb-size: 48px;
 		font-size: 11px;
 		font-weight: 600;
 		background: $vmfa-success;
-		color: #fff;
+		color: $vmfa-text-on-color;
 		padding: 1px 6px;
-		border-radius: 3px;
+		border-radius: $vmfa-radius-sm;
 
 		&--trashed {
-			background: rgba($vmfa-danger, 0.15);
+			background: $vmfa-danger-bg;
 			color: $vmfa-danger;
 		}
 	}
@@ -489,7 +499,7 @@ $vmfa-thumb-size: 48px;
 	align-items: center;
 	gap: 8px;
 	padding: 6px 12px;
-	background: #e7f3ff;
+	background: $vmfa-primary-tint;
 	border: 1px solid $vmfa-primary;
 	border-radius: $vmfa-radius;
 
@@ -576,7 +586,7 @@ $vmfa-thumb-size: 48px;
 			width: 100%;
 			max-width: 320px;
 			padding: 6px 8px;
-			border: 1px solid $vmfa-border;
+			border: 1px solid $vmfa-border-input;
 			border-radius: $vmfa-radius;
 			font-size: 13px;
 			line-height: 1.4;
